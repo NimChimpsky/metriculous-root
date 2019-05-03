@@ -1,0 +1,40 @@
+package au.com.metriculous.api;
+
+import au.com.metriculous.config.framework.annotations.Controller;
+import au.com.metriculous.config.framework.annotations.Post;
+import au.com.metriculous.scanner.MetriculousScanner;
+import au.com.metriculous.scanner.domain.PersonWithCount;
+import au.com.metriculous.scanner.domain.Tuple;
+import au.com.metriculous.scanner.result.DefaultPaging;
+import au.com.metriculous.scanner.result.Paging;
+import com.google.gson.Gson;
+
+import java.util.List;
+import java.util.Map;
+
+@Controller
+public class FileController {
+    private final Gson gson;
+    private final MetriculousScanner metriculousScanner;
+
+    public FileController(final Gson gson, final MetriculousScanner metriculousScanner) {
+        this.gson = gson;
+        this.metriculousScanner = metriculousScanner;
+    }
+
+    @Post("/file/time")
+    public String timeLineCount(Map<String, String> parameters, String jsonBody) {
+        Paging paging = new DefaultPaging(parameters);
+        String fileName = gson.fromJson(jsonBody, String.class);
+        List<Tuple<Integer, Long>> result = metriculousScanner.blameResult().file().timeLineCount(fileName, paging);
+        return gson.toJson(result);
+    }
+
+    @Post("/file/person")
+    public String personLineCount(Map<String, String> parameters, String jsonBody) {
+        Paging paging = new DefaultPaging(parameters);
+        String fileName = gson.fromJson(jsonBody, String.class);
+        List<PersonWithCount> result = metriculousScanner.blameResult().file().peopleWithMostLines(fileName, paging);
+        return gson.toJson(result);
+    }
+}

@@ -1,0 +1,3 @@
+rootProject.name = 'metriculous-root'
+include 'metriculous-scanner', 'metriculous-fronted'
+
