@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
 public class Context implements ApplicationContext {
@@ -124,11 +125,9 @@ public class Context implements ApplicationContext {
             public String apply(Map<String, String> parameters) {
                 try {
                     return (String) method.invoke(controller, parameters);
-                } catch (IllegalAccessException e) {
-                    logger.error("IllegalAccessException processing get request mapping {}", e);
-                    return e.getMessage();
-                } catch (InvocationTargetException e) {
-                    logger.error("InvocationTargetException processing get request mapping{}", e);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    logger.error("Exception processing get request mapping {}", e);
+                    logger.error("parameters {}", mapToCsv(parameters));
                     return e.getMessage();
                 }
 
@@ -136,17 +135,33 @@ public class Context implements ApplicationContext {
         };
     }
 
+    private String mapToCsv(Map<String, String> map) {
+        if (map.isEmpty()) {
+            return "";
+        }
+        return map.entrySet().stream().map(new Function<Map.Entry<String, String>, String>() {
+            @Override
+            public String apply(Map.Entry<String, String> entry) {
+                return entry.getKey() + ":" + entry.getValue();
+            }
+        }).reduce(new BinaryOperator<String>() {
+            @Override
+            public String apply(String s, String s2) {
+                return s + "," + s2;
+            }
+        }).get();
+    }
+
     private BiFunction<Map<String, String>, String, String> createRequestBodyFunction(Method method, Object controller) {
         return new BiFunction<Map<String, String>, String, String>() {
             @Override
-            public String apply(Map<String, String> parameterMap, String requestBody) {
+            public String apply(Map<String, String> parameters, String requestBody) {
                 try {
-                    return (String) method.invoke(controller, parameterMap, requestBody);
-                } catch (IllegalAccessException e) {
-                    logger.error("IllegalAccessException processing post request mapping {}", e);
-                    return e.getMessage();
-                } catch (InvocationTargetException e) {
-                    logger.error("InvocationTargetException processing post request mapping {}", e);
+                    return (String) method.invoke(controller, parameters, requestBody);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    logger.error("Exception processing post request", e);
+                    logger.error("parameters {}", mapToCsv(parameters));
+                    logger.error("request body {}", requestBody);
                     return e.getMessage();
                 }
 
