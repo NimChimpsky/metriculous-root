@@ -38,7 +38,7 @@ task fatJar(type: Jar) {
                 'Implementation-Version': version,
                 'Main-Class': 'Server'
      }
-    archiveName = 'myfat.jar'
+    archiveName = 'metriculous.jar'
     doFirst {
         from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     }

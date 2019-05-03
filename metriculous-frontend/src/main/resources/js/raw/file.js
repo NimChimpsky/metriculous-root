@@ -29,15 +29,10 @@ function file(json) {
         // 'orange', 'yellow', 'green', 'light-green',
         // 'purple', 'magenta', 'grey', 'dark-grey']
 
-        format_tooltip_x: d = > (d + '').toUpperCase(),
-        format_tooltip_y
-:
-    d =
->
-    d + ' pts'
-})
-    ;
-    chart.parent.addEventListener('data-select', (e) = > {
+        format_tooltip_x: d => (d + '').toUpperCase(),
+        format_tooltip_y: d => d + ' pts'
+    });
+    chart.parent.addEventListener('data-select', (e) => {
         document.getElementById("person-specific-info").style.display = "none";
     document.getElementById("file-specific-info").style.display = "grid";
     post(api + "/file/person" + queryString, labels[e.index], lineCountForFileByAuthor);
@@ -80,23 +75,17 @@ function lineCountForFileByAuthor(filename, json) {
         // 'orange', 'yellow', 'green', 'light-green',
         // 'purple', 'magenta', 'grey', 'dark-grey']
 
-        format_tooltip_x: d = > (d + '').toUpperCase(),
-        format_tooltip_y
-:
-    d =
->
-    d + ' pts'
-})
-    ;
+        format_tooltip_x: d => (d + '').toUpperCase(),
+        format_tooltip_y: d => d + ' pts'
+    });
 
     // this is now working, set navigable to true above
-    chart.parent.addEventListener('data-select', (e) = > {
+    chart.parent.addEventListener('data-select', (e) => {
         console.log("am I here");
     console.log(JSON.stringify(e));
     alert(e.index + " " + e.value); // e contains index and value of current datapoint
     post(api + "/commit/file/person" + queryString, values[e.index], lineCountForFileByTime);
-})
-    ;
+    });
 }
 
 function lineCountForFileByTime(filename, json) {
@@ -132,15 +121,11 @@ function lineCountForFileByTime(filename, json) {
         // 'orange', 'yellow', 'green', 'light-green',
         // 'purple', 'magenta', 'grey', 'dark-grey']
 
-        format_tooltip_x: d = > (d + '').toUpperCase(),
-        format_tooltip_y
-:
-    d =
->
-    d + ' pts'
+            format_tooltip_x: d => (d + '').toUpperCase(),
+            format_tooltip_y: d => d + ' pts'
 })
     ;
-    chart.parent.addEventListener('data-select', (e) = > {
+    chart.parent.addEventListener('data-select', (e) => {
         // console.log(JSON.stringify(e));
         alert(e.index + " " + e.value
 )

@@ -13,19 +13,12 @@ function calendar(json) {
         // 'orange', 'yellow', 'green', 'light-green',
         // 'purple', 'magenta', 'grey', 'dark-grey']
 
-        format_tooltip_x: d = > (d + '').toUpperCase(),
-        format_tooltip_y
-:
-    d =
->
-    d + ' pts'
-})
-    ;
-    chart.parent.addEventListener('data-select', (e) = > {
+        format_tooltip_x: d => (d + '').toUpperCase(),
+        format_tooltip_y: d => d + ' pts'
+    });
+    chart.parent.addEventListener('data-select', (e) => {
         // console.log(JSON.stringify(e));
         alert("dayOfWeekEventListener" +e.index + " " + e.value
-)
-    ; // e contains index and value of current datapoint
-})
-    ;
+        ); // e contains index and value of current datapoint
+    });
 }

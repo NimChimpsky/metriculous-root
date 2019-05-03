@@ -39,21 +39,16 @@ function person(json) {
         // height: 100,
 
         colors: ['#7cd6fd'],
-        format_tooltip_x: d = > (d + '').toUpperCase(),
-        format_tooltip_y
-:
-    d =
->
-    d + ' pts'
-})
-    ;
+        format_tooltip_x: d => (d + '').toUpperCase(),
+        format_tooltip_y: d => d + ' pts'
+    });
 
-    chart.parent.addEventListener('data-select', (e) = > {
+    chart.parent.addEventListener('data-select', (e) => {
         document.getElementById("person-specific-info").style.display = "grid";
-    document.getElementById("file-specific-info").style.display = "none";
-    post(api + "/person/file" + queryString, people[e.index], personlinesPerFileCallback);
-    post(api + "/person/time" + queryString, people[e.index], linesCommitTime);
-})
+        document.getElementById("file-specific-info").style.display = "none";
+        post(api + "/person/file" + queryString, people[e.index], personlinesPerFileCallback);
+        post(api + "/person/time" + queryString, people[e.index], linesCommitTime);
+    })
     ;
 }
 
@@ -77,37 +72,33 @@ function personlinesPerFileCallback(person, json) {
     };
 
     let chart = new frappe.Chart("#linesPerFileForPersonChart", {
-        title: person.name + ": Lines per file ",
-        data: data,
-        isNavigable: true,
-        type: 'bar', // or 'line', 'scatter', 'pie', 'percentage'
-        // height: 100,
+            title: person.name + ": Lines per file ",
+            data: data,
+            isNavigable: true,
+            type: 'bar', // or 'line', 'scatter', 'pie', 'percentage'
+            // height: 100,
 
-        colors: ['violet', 'blue'],
-        // hex-codes or these preset colors;
-        // defaults (in order):
-        // ['light-blue', 'blue', 'violet', 'red',
-        // 'orange', 'yellow', 'green', 'light-green',
-        // 'purple', 'magenta', 'grey', 'dark-grey']
+            colors: ['violet', 'blue'],
+            // hex-codes or these preset colors;
+            // defaults (in order):
+            // ['light-blue', 'blue', 'violet', 'red',
+            // 'orange', 'yellow', 'green', 'light-green',
+            // 'purple', 'magenta', 'grey', 'dark-grey']
 
-        format_tooltip_x: d = > (d + '').toUpperCase(),
-        format_tooltip_y
-:
-    d =
->
-    d + ' pts'
-})
+            format_tooltip_x: d => (d + '').toUpperCase(),
+            format_tooltip_y: d => d + ' pts'
+        })
     ;
-    chart.parent.addEventListener('data-select', (e) = > {
+    chart.parent.addEventListener('data-select', (e) => {
         // console.log(JSON.stringify(e));
         alert(e.index + " " + e.value
-)
-    ; // e contains index and value of current datapoint
-    console.log("personlinesPerFileCallback");
-    console.log(JSON.stringify(e));
-    alert(e.index + " " + e.value); // e contains index and value of current datapoint
-    post(api + "/commit/file/person" + queryString + "&filename=" + e.label, person, lineCountForFileByTime);
-})
+        )
+        ; // e contains index and value of current datapoint
+        console.log("personlinesPerFileCallback");
+        console.log(JSON.stringify(e));
+        alert(e.index + " " + e.value); // e contains index and value of current datapoint
+        post(api + "/commit/file/person" + queryString + "&filename=" + e.label, person, lineCountForFileByTime);
+    })
     ;
 }
 
@@ -128,20 +119,15 @@ function linesCommitTime(person, json) {
         // 'orange', 'yellow', 'green', 'light-green',
         // 'purple', 'magenta', 'grey', 'dark-grey']
 
-        format_tooltip_x: d = > (d + '').toUpperCase(),
-        format_tooltip_y
-:
-    d =
->
-    d + ' pts'
-})
-    ;
-    chart.parent.addEventListener('data-select', (e) = > {
+        format_tooltip_x: d => (d + '').toUpperCase(),
+        format_tooltip_y: d => d + ' pts'
+    });
+    chart.parent.addEventListener('data-select', (e) => {
         // console.log(JSON.stringify(e));
         alert(e.index + " " + e.value
-)
-    ; // e contains index and value of current datapoint
-})
+        )
+        ; // e contains index and value of current datapoint
+    })
     ;
 }
 

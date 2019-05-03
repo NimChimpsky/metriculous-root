@@ -66,10 +66,10 @@ public class Server {
 
     private static HttpHandler createHandler(HttpHandler servletHandler) {
         return Handlers.path()
-                       .addExactPath("/", resource(new PathResourceManager(Paths.get("src/main/resources/Index.html"), 100))
+                       .addExactPath("/", resource(new PathResourceManager(Paths.get("metriculous-frontend/src/main/resources/Index.html"), 100))
                                .setDirectoryListingEnabled(false)) // resolves index.html
                        .addPrefixPath(ApplicationContext.getPath(), servletHandler)
-                       .addPrefixPath("/static", resource(new PathResourceManager(Paths.get("src/main/resources/"))));
+                       .addPrefixPath("/static", resource(new PathResourceManager(Paths.get("metriculous-frontend/src/main/resources/"))));
 
     }
 
