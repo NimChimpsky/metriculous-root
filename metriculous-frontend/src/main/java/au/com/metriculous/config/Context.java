@@ -135,22 +135,7 @@ public class Context implements ApplicationContext {
         };
     }
 
-    private String mapToCsv(Map<String, String> map) {
-        if (map.isEmpty()) {
-            return "";
-        }
-        return map.entrySet().stream().map(new Function<Map.Entry<String, String>, String>() {
-            @Override
-            public String apply(Map.Entry<String, String> entry) {
-                return entry.getKey() + ":" + entry.getValue();
-            }
-        }).reduce(new BinaryOperator<String>() {
-            @Override
-            public String apply(String s, String s2) {
-                return s + "," + s2;
-            }
-        }).get();
-    }
+
 
     private BiFunction<Map<String, String>, String, String> createRequestBodyFunction(Method method, Object controller) {
         return new BiFunction<Map<String, String>, String, String>() {
@@ -187,5 +172,22 @@ public class Context implements ApplicationContext {
     @Override
     public Map<String, Function<Map<String, String>, String>> requestMappingDelete() {
         return deleteControllerMap;
+    }
+
+    private String mapToCsv(Map<String, String> map) {
+        if (map.isEmpty()) {
+            return "";
+        }
+        return map.entrySet().stream().map(new Function<Map.Entry<String, String>, String>() {
+            @Override
+            public String apply(Map.Entry<String, String> entry) {
+                return entry.getKey() + ":" + entry.getValue();
+            }
+        }).reduce(new BinaryOperator<String>() {
+            @Override
+            public String apply(String s, String s2) {
+                return s + "," + s2;
+            }
+        }).get();
     }
 }
