@@ -23,7 +23,7 @@ public class BlameResultDataStore {
     private final Map<String, Map<Person, Long>> authorsPerFile = new ConcurrentHashMap<>();
     private final Map<String, AtomicInteger> numberOfAuthorsPerFile = new ConcurrentHashMap<>();
     private final Map<String, Map<Integer, AtomicLong>> lineCountTimeFile = new ConcurrentHashMap<>();
-    private final Map<String, Map<Person, List<String>>> commitStoreByFilePerson = new ConcurrentHashMap<>();
+    private final Map<String, Map<Person, List<Tuple<Long, String>>>> commitStoreByFilePerson = new ConcurrentHashMap<>();
     private final NavigableSet<Tuple<Integer, String>> commitSet = new TreeSet<>(new Comparator<Tuple<Integer, String>>() {
         @Override
         public int compare(Tuple<Integer, String> tuple, Tuple<Integer, String> otherTuple) {
@@ -55,17 +55,19 @@ public class BlameResultDataStore {
 //        if (map == null) {
 //            map = new HashMap<>(1);
 //        }
-        Map<Person, List<String>> map = commitStoreByFilePerson.merge(filePathStr, new HashMap<>(1), new BiFunction<Map<Person, List<String>>, Map<Person, List<String>>, Map<Person, List<String>>>() {
+        Map<Person, List<Tuple<Long, String>>> map = commitStoreByFilePerson.merge(filePathStr, new HashMap<>(1), new BiFunction<Map<Person, List<Tuple<Long, String>>>, Map<Person, List<Tuple<Long, String>>>, Map<Person, List<Tuple<Long, String>>>>() {
             @Override
-            public Map<Person, List<String>> apply(Map<Person, List<String>> existing, Map<Person, List<String>> empty) {
+            public Map<Person, List<Tuple<Long, String>>> apply(Map<Person, List<Tuple<Long, String>>> existing, Map<Person, List<Tuple<Long, String>>> empty) {
 
                 return existing == null ? empty : existing;
             }
         });
 
-        map.merge(person, new ArrayList<>(Arrays.asList(revCommit.getName())), new BiFunction<List<String>, List<String>, List<String>>() {
+        List<Tuple<Long, String>> list = new ArrayList(Arrays.asList(new Tuple(revCommit.getCommitTime(), revCommit.getName())));
+
+        map.merge(person, list, new BiFunction<List<Tuple<Long, String>>, List<Tuple<Long, String>>, List<Tuple<Long, String>>>() {
             @Override
-            public List<String> apply(List<String> current, List<String> additional) {
+            public List<Tuple<Long, String>> apply(List<Tuple<Long, String>> current, List<Tuple<Long, String>> additional) {
                 if (current == null) {
                     return additional;
 
@@ -197,7 +199,7 @@ public class BlameResultDataStore {
         return lineCountTimeFile;
     }
 
-    public Map<String, Map<Person, List<String>>> getCommitStoreByFilePerson() {
+    public Map<String, Map<Person, List<Tuple<Long, String>>>> getCommitStoreByFilePerson() {
         return commitStoreByFilePerson;
     }
 
