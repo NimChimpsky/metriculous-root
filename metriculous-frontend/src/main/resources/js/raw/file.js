@@ -91,7 +91,7 @@ function lineCountForFileByAuthor(filename, json) {
 }
 
 function commitHistory(person, json) {
-    let tableStr = "<table><tr><th colspan='2'>" + person.name + "</th></tr>";
+    let tableStr = "<table class='metriculous-table'><tr><th colspan='2'>" + person.name + "</th></tr>";
     tableStr += "<table><tr><th colspan='1'>Timestamp</th><th>Hash</th></tr>";
     json.forEach(function (element) {
         let timestamp = new Date(element.left * 1000);
