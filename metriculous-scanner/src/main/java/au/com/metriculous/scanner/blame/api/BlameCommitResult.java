@@ -10,10 +10,7 @@ import au.com.metriculous.scanner.util.Converters;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BlameCommitResult implements CommitResult {
@@ -37,10 +34,10 @@ public class BlameCommitResult implements CommitResult {
 
     @Override
     public List<Tuple<Long, String>> commits(String filename, Person person, Paging paging) {
-        Map<String, Map<Person, List<Tuple<Long, String>>>> fileCommitMap = dataStore.getCommitStoreByFilePerson();
-        Map<Person, List<Tuple<Long, String>>> commitPersonMap = fileCommitMap.get(filename);
-        List<Tuple<Long, String>> resultList = commitPersonMap.get(person);
-        return paging.getSubList(resultList);
+        Map<String, Map<Person, Set<Tuple<Long, String>>>> fileCommitMap = dataStore.getCommitStoreByFilePerson();
+        Map<Person, Set<Tuple<Long, String>>> commitPersonMap = fileCommitMap.get(filename);
+        Set<Tuple<Long, String>> resultList = commitPersonMap.get(person);
+        return paging.getSubList(new ArrayList<>(resultList));
     }
 
 }

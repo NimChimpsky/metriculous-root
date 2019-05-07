@@ -134,13 +134,13 @@ public class MetriculousScannerTest {
     @Test
     public void commitFilePersonTest() {
         String filename = "database/src/test/java/database/dao/order/ParentOrderJournalDaoTest.java";
-        List<String> result = metriculousScanner.blameResult()
-                                                .commit()
-                                                .commits(filename, new Person("yukunix", "yukunix@hotmail.com"), PAGING);
+        List<Tuple<Long, String>> result = metriculousScanner.blameResult()
+                                                             .commit()
+                                                             .commits(filename, new Person("yukunix", "yukunix@hotmail.com"), PAGING);
         Assert.assertNotNull(result);
         Assert.assertFalse(result.isEmpty());
-        for (String hash : result) {
-            logger.info("found {}", hash);
+        for (Tuple tuple : result) {
+            logger.info("found {} {}", tuple.getLeft(), tuple.getRight());
         }
     }
 
