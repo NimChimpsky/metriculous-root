@@ -45,12 +45,15 @@ function file(json) {
 
 function lineCountForFileByAuthor(filename, json) {
     let labels = [];
-    let emails = []
+    let people = []
     let values = [];
 
     for (let i = 0; i < json.length; i++) {
         labels.push(json[i].person.name);
-        emails.push(json[i].person.email);
+        var tmp = new Object();
+        tmp.name = json[i].person.name;
+        tmp.email = json[i].person.email;
+        people.push(tmp);
         values.push(json[i].value);
     }
     let data = {
@@ -86,7 +89,7 @@ function lineCountForFileByAuthor(filename, json) {
         console.log("am I here");
         console.log(JSON.stringify(e));
         alert(e.index + " " + e.value); // e contains index and value of current datapoint
-        post(api + "/commit/file/person" + queryString + "&filename=" + filename, json[e.index], lineCountForFileByTime);
+        post(api + "/commit/file/person" + queryString + "&filename=" + filename, people[e.index], lineCountForFileByTime);
     });
 }
 
