@@ -86,13 +86,20 @@ function lineCountForFileByAuthor(filename, json) {
 
     // this is now working, set navigable to true above
     chart.parent.addEventListener('data-select', (e) => {
-        console.log("am I here");
-        console.log(JSON.stringify(e));
-        alert(e.index + " " + e.value); // e contains index and value of current datapoint
-        post(api + "/commit/file/person" + queryString + "&filename=" + filename, people[e.index], lineCountForFileByTime);
+        post(api + "/commit/file/person" + queryString + "&filename=" + filename, people[e.index], commitHistory);
     });
 }
 
+function commitHistory(person, json) {
+    let tableStr = "<table><tr><th colspan='2'>" + person.name + "</th></tr>";
+    tableStr += "<table><tr><th colspan='1'>Timestamp</th><th>Hash</th></tr>";
+    json.forEach(function (element) {
+        let timestamp = new Date(element.left * 1000);
+        tableStr += "<tr><td>" + timestamp + "</td><td>" + element.right + "</td></tr>";
+    });
+    tableStr += "</table>";
+    document.getElementById("commit-history").innerHTML = tableStr;
+}
 function lineCountForFileByTime(filename, json) {
     // console.log(JSON.stringify(json))
     // let labels = [];
