@@ -1,3 +1,4 @@
+var selectedFile = "";
 function file(json) {
     let labels = [];
     let values = [];
@@ -86,16 +87,17 @@ function lineCountForFileByAuthor(filename, json) {
 
     // this is now working, set navigable to true above
     chart.parent.addEventListener('data-select', (e) => {
+        selectedFile = filename;
         post(api + "/commit/file/person" + queryString + "&filename=" + filename, people[e.index], commitHistory);
     });
 }
 
 function commitHistory(person, json) {
-    let tableStr = "<table class='metriculous-table'><tr><th colspan='2'>" + person.name + "</th></tr>";
+    let tableStr = "<table class='metriculous-table'><tr><th colspan='2' text-align='center'>" + person.name + " : " + selectedFile + "</th></tr>";
     tableStr += "<table><tr><th colspan='1'>Timestamp</th><th>Hash</th></tr>";
     json.forEach(function (element) {
         let timestamp = new Date(element.left * 1000);
-        tableStr += "<tr><td>" + timestamp + "</td><td>" + element.right + "</td></tr>";
+        tableStr += "<tr><td>" + timestamp.toLocaleString() + "</td><td>" + element.right + "</td></tr>";
     });
     tableStr += "</table>";
     document.getElementById("commit-history").innerHTML = tableStr;
