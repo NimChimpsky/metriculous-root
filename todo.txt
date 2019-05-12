@@ -1,4 +1,3 @@
-update framework project with better error handling, and renamed context
 Polish up everything now in gui/api.
 
 Check everything is using line count, not commit count

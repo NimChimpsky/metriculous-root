@@ -91,10 +91,8 @@ function personlinesPerFileCallback(person, json) {
     ;
     chart.parent.addEventListener('data-select', (e) => {
         // e contains index and value of current datapoint
-        console.log("personlinesPerFileCallback");
-        console.log(JSON.stringify(e));
-        console.log(JSON.stringify(person));
-        post(api + "/commit/file/person" + queryString + "&filename=" + e.label, person, lineCountForFileByTime);
+        selectedFile = e.label;
+        post(api + "/commit/file/person" + queryString + "&filename=" + e.label, person, commitHistory);
     })
     ;
 }

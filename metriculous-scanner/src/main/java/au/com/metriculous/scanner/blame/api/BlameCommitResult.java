@@ -36,8 +36,11 @@ public class BlameCommitResult implements CommitResult {
     public List<Tuple<Long, String>> commits(String filename, Person person, Paging paging) {
         Map<String, Map<Person, Set<Tuple<Long, String>>>> fileCommitMap = dataStore.getCommitStoreByFilePerson();
         Map<Person, Set<Tuple<Long, String>>> commitPersonMap = fileCommitMap.get(filename);
-        Set<Tuple<Long, String>> resultList = commitPersonMap.get(person);
-        return paging.getSubList(new ArrayList<>(resultList));
+        Set<Tuple<Long, String>> resultSet = commitPersonMap.get(person);
+        List<Tuple<Long, String>> resultList = new ArrayList<>(resultSet);
+        Collections.sort(resultList);
+        Collections.reverse(resultList);
+        return paging.getSubList(resultList);
     }
 
 }
