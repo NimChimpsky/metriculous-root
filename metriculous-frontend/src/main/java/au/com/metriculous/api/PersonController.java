@@ -3,9 +3,8 @@ package au.com.metriculous.api;
 import au.com.metriculous.config.framework.annotations.Controller;
 import au.com.metriculous.config.framework.annotations.Post;
 import au.com.metriculous.scanner.MetriculousScanner;
-import au.com.metriculous.scanner.domain.Pair;
 import au.com.metriculous.scanner.domain.Person;
-import au.com.metriculous.scanner.domain.StringIntegerTuple;
+import au.com.metriculous.scanner.domain.Tuple;
 import au.com.metriculous.scanner.result.DefaultPaging;
 import com.google.gson.Gson;
 
@@ -25,9 +24,9 @@ public class PersonController {
     @Post("/person/time")
     public String personTimestampCount(Map<String, String> parameters, String json) {
         Person person = gson.fromJson(json, Person.class);
-        List<Pair<Integer>> result = metriculousScanner.blameResult()
-                                                       .people()
-                                                       .timeLineCount(person, new DefaultPaging(parameters));
+        List<Tuple<Integer, Integer>> result = metriculousScanner.blameResult()
+                                                                 .people()
+                                                                 .timeLineCount(person, new DefaultPaging(parameters));
         return gson.toJson(result);
     }
 

@@ -2,7 +2,7 @@ package au.com.metriculous.scanner.domain;
 
 import java.util.Objects;
 
-public class Tuple<L extends Comparable, R> implements Comparable<Tuple<L, R>> {
+public class Tuple<L extends Comparable, R extends Comparable> implements Comparable<Tuple<L, R>> {
     private final L left;
     private final R right;
 
@@ -37,4 +37,5 @@ public class Tuple<L extends Comparable, R> implements Comparable<Tuple<L, R>> {
     public int compareTo(Tuple<L, R> other) {
         return getLeft().compareTo(other.getLeft());
     }
+
 }

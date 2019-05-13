@@ -2,9 +2,8 @@ package au.com.metriculous.scanner.blame.api;
 
 import au.com.metriculous.scanner.blame.BlameBasedFileAnalyzer;
 import au.com.metriculous.scanner.blame.BlameResultDataStore;
-import au.com.metriculous.scanner.domain.Pair;
 import au.com.metriculous.scanner.domain.Person;
-import au.com.metriculous.scanner.domain.StringIntegerTuple;
+import au.com.metriculous.scanner.domain.Tuple;
 import au.com.metriculous.scanner.result.Paging;
 import au.com.metriculous.scanner.result.blame.PersonResult;
 
@@ -45,11 +44,11 @@ public class BlamePersonResult implements PersonResult {
 
     // this should be optimized/lazy loaded when scan complee
     @Override
-    public List<Pair<Integer>> timeLineCount(Person person, Paging paging) {
+    public List<Tuple<Integer, Integer>> timeLineCount(Person person, Paging paging) {
         Map<Integer, Integer> map = dataStore.getProdLineCountByTime().get(person);
-        List<Pair<Integer>> result = new LinkedList<>();
+        List<Tuple<Integer, Integer>> result = new LinkedList<>();
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            result.add(new Pair<Integer>(entry.getKey(), entry.getValue()));
+            result.add(new Tuple<Integer, Integer>(entry.getKey(), entry.getValue()));
         }
 
         return paging.getSubList(result);
