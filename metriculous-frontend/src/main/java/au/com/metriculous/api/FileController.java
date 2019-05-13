@@ -4,7 +4,7 @@ import au.com.metriculous.config.framework.annotations.Controller;
 import au.com.metriculous.config.framework.annotations.Post;
 import au.com.metriculous.scanner.MetriculousScanner;
 import au.com.metriculous.scanner.domain.PersonWithCount;
-import au.com.metriculous.scanner.domain.Tuple;
+import au.com.metriculous.scanner.domain.Pair;
 import au.com.metriculous.scanner.result.DefaultPaging;
 import au.com.metriculous.scanner.result.Paging;
 import com.google.gson.Gson;
@@ -26,7 +26,7 @@ public class FileController {
     public String timeLineCount(Map<String, String> parameters, String jsonBody) {
         Paging paging = new DefaultPaging(parameters);
         String fileName = gson.fromJson(jsonBody, String.class);
-        List<Tuple<Integer, Long>> result = metriculousScanner.blameResult().file().timeLineCount(fileName, paging);
+        List<Pair<Integer, Long>> result = metriculousScanner.blameResult().file().timeLineCount(fileName, paging);
         return gson.toJson(result);
     }
 

@@ -3,7 +3,7 @@ package au.com.metriculous.api;
 import au.com.metriculous.config.framework.annotations.Controller;
 import au.com.metriculous.config.framework.annotations.Get;
 import au.com.metriculous.scanner.MetriculousScanner;
-import au.com.metriculous.scanner.domain.Tuple;
+import au.com.metriculous.scanner.domain.Pair;
 import au.com.metriculous.scanner.result.DefaultPaging;
 import au.com.metriculous.scanner.result.Paging;
 import com.google.gson.Gson;
@@ -30,9 +30,9 @@ public class TimeController {
         String timeZoneIdStr = parameters.get("TimeZone");
         Paging paging = new DefaultPaging(parameters);
         ZoneId timeZoneId = ZoneId.of(timeZoneIdStr);
-        List<Tuple<String, Long>> result = metriculousScanner.blameResult()
-                                                             .time()
-                                                             .weeklyLineCount(timeZoneId, paging);
+        List<Pair<String, Long>> result = metriculousScanner.blameResult()
+                                                            .time()
+                                                            .weeklyLineCount(timeZoneId, paging);
         return gson.toJson(result);
     }
 

@@ -4,7 +4,7 @@ import au.com.metriculous.config.framework.annotations.Controller;
 import au.com.metriculous.config.framework.annotations.Get;
 import au.com.metriculous.scanner.MetriculousScanner;
 import au.com.metriculous.scanner.domain.PersonWithCount;
-import au.com.metriculous.scanner.domain.Tuple;
+import au.com.metriculous.scanner.domain.Pair;
 import au.com.metriculous.scanner.result.DefaultPaging;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
@@ -35,17 +35,17 @@ public class RawController {
 
     @Get("/raw/file")
     public String fileAuthorCount(Map<String, String> parameters) {
-        List<Tuple<String, Integer>> resultList = metriculousScanner.blameResult()
-                                                                    .raw()
-                                                                    .filesWithMostAuthors(new DefaultPaging(parameters));
+        List<Pair<String, Integer>> resultList = metriculousScanner.blameResult()
+                                                                   .raw()
+                                                                   .filesWithMostAuthors(new DefaultPaging(parameters));
         return gson.toJson(resultList);
     }
 
     @Get("/raw/time")
     public String timestampLineCount(Map<String, String> parameters) {
-        List<Tuple<Integer, Integer>> resultList = metriculousScanner.blameResult()
-                                                                     .raw()
-                                                                     .timeLineCount(new DefaultPaging(parameters));
+        List<Pair<Integer, Integer>> resultList = metriculousScanner.blameResult()
+                                                                    .raw()
+                                                                    .timeLineCount(new DefaultPaging(parameters));
         return gson.toJson(resultList);
     }
 

@@ -4,7 +4,7 @@ import au.com.metriculous.scanner.blame.BlameBasedFileAnalyzer;
 import au.com.metriculous.scanner.blame.BlameResultDataStore;
 import au.com.metriculous.scanner.domain.Person;
 import au.com.metriculous.scanner.domain.PersonWithCount;
-import au.com.metriculous.scanner.domain.Tuple;
+import au.com.metriculous.scanner.domain.Pair;
 import au.com.metriculous.scanner.result.Paging;
 import au.com.metriculous.scanner.result.blame.FileResult;
 
@@ -40,20 +40,20 @@ public class BlameFileResult implements FileResult {
     }
 
     @Override
-    public List<Tuple<Integer, Long>> timeLineCount(String filename, Paging paging) {
+    public List<Pair<Integer, Long>> timeLineCount(String filename, Paging paging) {
         Map<Integer, AtomicLong> commitTimeCountForFile = dataStore.getLineCountTimeFile().get(filename);
-        List<Tuple<Integer, Long>> tuples = commitTimeCountForFile.entrySet()
-                                                                  .stream()
-                                                                  .map(new Function<Map.Entry<Integer, AtomicLong>, Tuple<Integer, Long>>() {
+        List<Pair<Integer, Long>> pairs = commitTimeCountForFile.entrySet()
+                                                                .stream()
+                                                                .map(new Function<Map.Entry<Integer, AtomicLong>, Pair<Integer, Long>>() {
                                                                       @Override
-                                                                      public Tuple<Integer, Long> apply(Map.Entry<Integer, AtomicLong> entry) {
-                                                                          return new Tuple<>(entry.getKey(), entry
+                                                                      public Pair<Integer, Long> apply(Map.Entry<Integer, AtomicLong> entry) {
+                                                                          return new Pair<>(entry.getKey(), entry
                                                                                   .getValue()
                                                                                   .longValue());
                                                                       }
                                                                   })
-                                                                  .collect(Collectors.toList());
-        return paging.getSubList(tuples);
+                                                                .collect(Collectors.toList());
+        return paging.getSubList(pairs);
     }
 
 

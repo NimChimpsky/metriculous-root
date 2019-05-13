@@ -58,8 +58,8 @@ function personlinesPerFileCallback(person, json) {
     let values = [];
 
     for (let i = 0; i < json.length; i++) {
-        labels.push(json[i].label);
-        values.push(json[i].value);
+        labels.push(json[i].left);
+        values.push(json[i].right);
     }
     let data = {
         labels: labels,
@@ -122,7 +122,6 @@ function linesCommitTime(person, json) {
         alert(e.index + " " + e.value
         )
         ; // e contains index and value of current datapoint
-    })
-    ;
+    });
 }
 

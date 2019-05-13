@@ -2,11 +2,11 @@ package au.com.metriculous.scanner.domain;
 
 import java.util.Objects;
 
-public class Tuple<L extends Comparable, R extends Comparable> implements Comparable<Tuple<L, R>> {
+public class Pair<L extends Comparable, R extends Comparable> implements Comparable<Pair<L, R>> {
     private final L left;
     private final R right;
 
-    public Tuple(final L left, final R right) {
+    public Pair(final L left, final R right) {
         this.left = left;
         this.right = right;
     }
@@ -23,9 +23,9 @@ public class Tuple<L extends Comparable, R extends Comparable> implements Compar
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Tuple<?, ?> tuple = (Tuple<?, ?>) o;
-        return Objects.equals(getLeft(), tuple.getLeft()) &&
-                Objects.equals(getRight(), tuple.getRight());
+        Pair<?, ?> pair = (Pair<?, ?>) o;
+        return Objects.equals(getLeft(), pair.getLeft()) &&
+                Objects.equals(getRight(), pair.getRight());
     }
 
     @Override
@@ -34,7 +34,7 @@ public class Tuple<L extends Comparable, R extends Comparable> implements Compar
     }
 
     @Override
-    public int compareTo(Tuple<L, R> other) {
+    public int compareTo(Pair<L, R> other) {
         return getLeft().compareTo(other.getLeft());
     }
 

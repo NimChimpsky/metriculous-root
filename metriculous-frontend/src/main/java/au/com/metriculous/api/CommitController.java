@@ -5,7 +5,7 @@ import au.com.metriculous.config.framework.annotations.Get;
 import au.com.metriculous.config.framework.annotations.Post;
 import au.com.metriculous.scanner.MetriculousScanner;
 import au.com.metriculous.scanner.domain.Person;
-import au.com.metriculous.scanner.domain.Tuple;
+import au.com.metriculous.scanner.domain.Pair;
 import au.com.metriculous.scanner.result.DefaultPaging;
 import au.com.metriculous.scanner.result.Paging;
 import com.google.gson.Gson;
@@ -30,9 +30,9 @@ public class CommitController {
         Person person = gson.fromJson(json, Person.class);
         Paging paging = new DefaultPaging(parameters);
         String filename = parameters.get("filename");
-        List<Tuple<Long, String>> commitList = metriculousScanner.blameResult()
-                                                                 .commit()
-                                                                 .commits(filename, person, paging);
+        List<Pair<Long, String>> commitList = metriculousScanner.blameResult()
+                                                                .commit()
+                                                                .commits(filename, person, paging);
         return gson.toJson(commitList);
     }
 

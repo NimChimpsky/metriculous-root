@@ -1,11 +1,12 @@
 var selectedFile = "";
+
 function file(json) {
     let labels = [];
     let values = [];
     // console.log(JSON.stringify(json));
     for (let i = 0; i < json.length; i++) {
-        labels.push(json[i].label);
-        values.push(json[i].value);
+        labels.push(json[i].left);
+        values.push(json[i].right);
     }
     let data = {
         labels: labels,
@@ -42,6 +43,33 @@ function file(json) {
         // alert("show lines per author for file" + e.index + " " + e.label); // e contains index and value of current datapoint
     })
     ;
+}
+
+function lineCountForFileByTime(filename, json) {
+    // console.log("person " + JSON.stringify(person));
+    // console.log("json " + JSON.stringify(json));
+    let chart = new frappe.Chart("#lineCountForFileByTime", {
+        title: person.name + ": Time of most lines editted ",
+        data: dayOfWeek(json),
+        isNavigable: true,
+        type: 'bar', // or 'line', 'scatter', 'pie', 'percentage'
+        // height: 100,
+
+        colors: ['violet', 'blue'],
+        // hex-codes or these preset colors;
+        // defaults (in order):
+        // ['light-blue', 'blue', 'violet', 'red',
+        // 'orange', 'yellow', 'green', 'light-green',
+        // 'purple', 'magenta', 'grey', 'dark-grey']
+
+        format_tooltip_x: d => (d + '').toUpperCase(),
+        format_tooltip_y: d => d + ' pts'
+    });
+    chart.parent.addEventListener('data-select', (e) => {
+        // console.log(JSON.stringify(e));
+        alert(e.index + " " + e.value
+        ); // e contains index and value of current datapoint
+    });
 }
 
 function lineCountForFileByAuthor(filename, json) {

@@ -2,7 +2,7 @@ package au.com.metriculous.scanner.blame.api;
 
 import au.com.metriculous.scanner.blame.BlameBasedFileAnalyzer;
 import au.com.metriculous.scanner.blame.BlameResultDataStore;
-import au.com.metriculous.scanner.domain.Tuple;
+import au.com.metriculous.scanner.domain.Pair;
 import au.com.metriculous.scanner.result.Paging;
 import au.com.metriculous.scanner.result.blame.TimeResult;
 
@@ -26,7 +26,7 @@ public class BlameTimeResult implements TimeResult {
     }
 
     @Override
-    public List<Tuple<String, Long>> calendarLineCount(Function<ZonedDateTime, String> keyFunction, ZoneId zoneId, Paging paging) {
+    public List<Pair<String, Long>> calendarLineCount(Function<ZonedDateTime, String> keyFunction, ZoneId zoneId, Paging paging) {
         Map<String, Long> monthCount = new HashMap<>(12);
         for (Map.Entry<Integer, AtomicInteger> entry : dataStore.getLineCountByTimeAll().entrySet()) {
             Integer commitTimeStamp = entry.getKey();
@@ -41,35 +41,35 @@ public class BlameTimeResult implements TimeResult {
             });
         }
 
-        List<Tuple<String, Long>> resultList = monthCount.entrySet()
-                                                         .stream()
-                                                         .map(new Function<Map.Entry<String, Long>, Tuple<String, Long>>() {
+        List<Pair<String, Long>> resultList = monthCount.entrySet()
+                                                        .stream()
+                                                        .map(new Function<Map.Entry<String, Long>, Pair<String, Long>>() {
                                                              @Override
-                                                             public Tuple<String, Long> apply(Map.Entry<String, Long> entry) {
+                                                             public Pair<String, Long> apply(Map.Entry<String, Long> entry) {
                                                                  // convert to string month
-                                                                 return new Tuple(entry.getKey(), entry.getValue());
+                                                                 return new Pair(entry.getKey(), entry.getValue());
                                                              }
                                                          })
-                                                         .collect(Collectors.toList());
+                                                        .collect(Collectors.toList());
 
         return paging.getSubList(resultList);
     }
 
     @Override
-    public List<Tuple<String, Long>> monthlyLineCount(ZoneId zoneId, Paging paging) {
+    public List<Pair<String, Long>> monthlyLineCount(ZoneId zoneId, Paging paging) {
         Function<ZonedDateTime, String> keyFunction =
                 zonedDateTime -> zonedDateTime.getYear() + "" + zonedDateTime.getMonthValue();
         return calendarLineCount(keyFunction, zoneId, paging);
     }
 
     @Override
-    public List<Tuple<String, Long>> weeklyLineCount(ZoneId zoneId, Paging paging) {
+    public List<Pair<String, Long>> weeklyLineCount(ZoneId zoneId, Paging paging) {
         Function<ZonedDateTime, String> keyFunction = zonedDateTime -> zonedDateTime.getYear() + "" + zonedDateTime.get(IsoFields.WEEK_BASED_YEAR);
         return calendarLineCount(keyFunction, zoneId, paging);
     }
 
     @Override
-    public List<Tuple<String, Long>> dailyLineCount(ZoneId zoneId, Paging paging) {
+    public List<Pair<String, Long>> dailyLineCount(ZoneId zoneId, Paging paging) {
         Function<ZonedDateTime, String> keyFunction = zonedDateTime -> zonedDateTime.getYear() + "" + zonedDateTime.getMonthValue() + "" + zonedDateTime
                 .getDayOfMonth();
         return calendarLineCount(keyFunction, zoneId, paging);

@@ -1,7 +1,7 @@
 package au.com.metriculous.scanner.blame;
 
 import au.com.metriculous.scanner.domain.Person;
-import au.com.metriculous.scanner.domain.Tuple;
+import au.com.metriculous.scanner.domain.Pair;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.util.*;
@@ -23,11 +23,11 @@ public class BlameResultDataStore {
     private final Map<String, Map<Person, Long>> authorsPerFile = new ConcurrentHashMap<>();
     private final Map<String, AtomicInteger> numberOfAuthorsPerFile = new ConcurrentHashMap<>();
     private final Map<String, Map<Integer, AtomicLong>> lineCountTimeFile = new ConcurrentHashMap<>();
-    private final Map<String, Map<Person, Set<Tuple<Long, String>>>> commitStoreByFilePerson = new ConcurrentHashMap<>();
-    private final NavigableSet<Tuple<Integer, String>> commitSet = new TreeSet<>(new Comparator<Tuple<Integer, String>>() {
+    private final Map<String, Map<Person, Set<Pair<Long, String>>>> commitStoreByFilePerson = new ConcurrentHashMap<>();
+    private final NavigableSet<Pair<Integer, String>> commitSet = new TreeSet<>(new Comparator<Pair<Integer, String>>() {
         @Override
-        public int compare(Tuple<Integer, String> tuple, Tuple<Integer, String> otherTuple) {
-            return tuple.getLeft().compareTo(otherTuple.getLeft());
+        public int compare(Pair<Integer, String> pair, Pair<Integer, String> otherPair) {
+            return pair.getLeft().compareTo(otherPair.getLeft());
         }
     });
     private final AtomicInteger totalCount = new AtomicInteger(0);
@@ -55,20 +55,20 @@ public class BlameResultDataStore {
 //        if (map == null) {
 //            map = new HashMap<>(1);
 //        }
-        Map<Person, Set<Tuple<Long, String>>> map = commitStoreByFilePerson.merge(filePathStr, new HashMap<>(1), new BiFunction<Map<Person, Set<Tuple<Long, String>>>, Map<Person, Set<Tuple<Long, String>>>, Map<Person, Set<Tuple<Long, String>>>>() {
+        Map<Person, Set<Pair<Long, String>>> map = commitStoreByFilePerson.merge(filePathStr, new HashMap<>(1), new BiFunction<Map<Person, Set<Pair<Long, String>>>, Map<Person, Set<Pair<Long, String>>>, Map<Person, Set<Pair<Long, String>>>>() {
             @Override
-            public Map<Person, Set<Tuple<Long, String>>> apply(Map<Person, Set<Tuple<Long, String>>> existing, Map<Person, Set<Tuple<Long, String>>> empty) {
+            public Map<Person, Set<Pair<Long, String>>> apply(Map<Person, Set<Pair<Long, String>>> existing, Map<Person, Set<Pair<Long, String>>> empty) {
 
                 return existing == null ? empty : existing;
             }
         });
 
-        Set<Tuple<Long, String>> set = new HashSet<>();
-        set.add(new Tuple(revCommit.getCommitTime(), revCommit.getName()));
+        Set<Pair<Long, String>> set = new HashSet<>();
+        set.add(new Pair(revCommit.getCommitTime(), revCommit.getName()));
 
-        map.merge(person, set, new BiFunction<Set<Tuple<Long, String>>, Set<Tuple<Long, String>>, Set<Tuple<Long, String>>>() {
+        map.merge(person, set, new BiFunction<Set<Pair<Long, String>>, Set<Pair<Long, String>>, Set<Pair<Long, String>>>() {
             @Override
-            public Set<Tuple<Long, String>> apply(Set<Tuple<Long, String>> current, Set<Tuple<Long, String>> additional) {
+            public Set<Pair<Long, String>> apply(Set<Pair<Long, String>> current, Set<Pair<Long, String>> additional) {
                 if (current == null) {
                     return additional;
 
@@ -78,7 +78,7 @@ public class BlameResultDataStore {
             }
         });
 
-        commitSet.add(new Tuple<>(revCommit.getCommitTime(), revCommit.getName()));
+        commitSet.add(new Pair<>(revCommit.getCommitTime(), revCommit.getName()));
     }
 
     private void incrementAuthorsPerFile(String filePathStr, Person person) {
@@ -200,11 +200,11 @@ public class BlameResultDataStore {
         return lineCountTimeFile;
     }
 
-    public Map<String, Map<Person, Set<Tuple<Long, String>>>> getCommitStoreByFilePerson() {
+    public Map<String, Map<Person, Set<Pair<Long, String>>>> getCommitStoreByFilePerson() {
         return commitStoreByFilePerson;
     }
 
-    public NavigableSet<Tuple<Integer, String>> getCommitSet() {
+    public NavigableSet<Pair<Integer, String>> getCommitSet() {
         return commitSet;
     }
 }

@@ -96,24 +96,24 @@ public class MetriculousScannerTest {
 
     @Test
     public void filenameTimestampCountTest() {
-        List<Tuple<Integer, Long>> result = metriculousScanner.blameResult()
-                                                              .file()
-                                                              .timeLineCount("mediator/src/main/java/mediator/MediatorProperties.java", PAGING);
+        List<Pair<Integer, Long>> result = metriculousScanner.blameResult()
+                                                             .file()
+                                                             .timeLineCount("mediator/src/main/java/mediator/MediatorProperties.java", PAGING);
         Assert.assertNotNull(result);
         Assert.assertFalse(result.isEmpty());
-        for (Tuple<Integer, Long> pair : result) {
+        for (Pair<Integer, Long> pair : result) {
             logger.info("found {} with {}", pair.getLeft(), pair.getRight());
         }
     }
 
     @Test
     public void monthlyCompleteTest() {
-        List<Tuple<String, Long>> result = metriculousScanner.blameResult()
-                                                             .time()
-                                                             .monthlyLineCount(ZoneId.of("Australia/Sydney"), PAGING);
+        List<Pair<String, Long>> result = metriculousScanner.blameResult()
+                                                            .time()
+                                                            .monthlyLineCount(ZoneId.of("Australia/Sydney"), PAGING);
         Assert.assertNotNull(result);
         Assert.assertFalse(result.isEmpty());
-        for (Tuple<String, Long> pair : result) {
+        for (Pair<String, Long> pair : result) {
             logger.info("found {} with {}", pair.getLeft(), pair.getRight());
         }
     }
@@ -134,13 +134,13 @@ public class MetriculousScannerTest {
     @Test
     public void commitFilePersonTest() {
         String filename = "database/src/test/java/database/dao/order/ParentOrderJournalDaoTest.java";
-        List<Tuple<Long, String>> result = metriculousScanner.blameResult()
-                                                             .commit()
-                                                             .commits(filename, new Person("yukunix", "yukunix@hotmail.com"), PAGING);
+        List<Pair<Long, String>> result = metriculousScanner.blameResult()
+                                                            .commit()
+                                                            .commits(filename, new Person("yukunix", "yukunix@hotmail.com"), PAGING);
         Assert.assertNotNull(result);
         Assert.assertFalse(result.isEmpty());
-        for (Tuple tuple : result) {
-            logger.info("found {} {}", tuple.getLeft(), tuple.getRight());
+        for (Pair pair : result) {
+            logger.info("found {} {}", pair.getLeft(), pair.getRight());
         }
     }
 
