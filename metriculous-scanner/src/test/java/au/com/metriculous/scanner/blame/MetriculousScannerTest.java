@@ -1,7 +1,9 @@
 package au.com.metriculous.scanner.blame;
 
 import au.com.metriculous.scanner.MetriculousScanner;
-import au.com.metriculous.scanner.domain.*;
+import au.com.metriculous.scanner.domain.Pair;
+import au.com.metriculous.scanner.domain.Person;
+import au.com.metriculous.scanner.domain.PersonWithCount;
 import au.com.metriculous.scanner.result.Paging;
 import org.junit.Assert;
 import org.junit.Before;
@@ -57,26 +59,26 @@ public class MetriculousScannerTest {
 
     @Test
     public void filesWithMostAuthorsTest() {
-        List<StringIntegerTuple> result = metriculousScanner.blameResult()
-                                                            .raw()
-                                                            .filesWithMostAuthors(PAGING);
+        List<Pair<String, Integer>> result = metriculousScanner.blameResult()
+                                                               .raw()
+                                                               .filesWithMostAuthors(PAGING);
         Assert.assertNotNull(result);
         Assert.assertFalse(result.isEmpty());
 //        Assert.assertEquals(5, result.size());
-        for (StringIntegerTuple filesAuthors : result) {
-            logger.info("found {} with {}", filesAuthors.getLabel(), filesAuthors.getValue());
+        for (Pair<String, Integer> filesAuthors : result) {
+            logger.info("found {} with {}", filesAuthors.getLeft(), filesAuthors.getRight());
         }
     }
 
     @Test
     public void timestampLineCountTest() {
-        List<Pair<Integer>> result = metriculousScanner.blameResult()
-                                                       .raw()
-                                                       .timeLineCount(PAGING);
+        List<Pair<Integer, Integer>> result = metriculousScanner.blameResult()
+                                                                .raw()
+                                                                .timeLineCount(PAGING);
         Assert.assertNotNull(result);
         Assert.assertFalse(result.isEmpty());
 //        Assert.assertEquals(5, result.size());
-        for (Pair<Integer> timestampCount : result) {
+        for (Pair<Integer, Integer> timestampCount : result) {
             logger.info("found {} with {}", timestampCount.getLeft(), timestampCount.getRight());
         }
     }
