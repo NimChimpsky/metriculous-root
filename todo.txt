@@ -1,6 +1,8 @@
 Polish up everything now in gui/api.
 
 graphs are initialized with a selection, that does not fire. Must click away and back again to fire.
+make commit history bigger/clearer
+go through check alerts when clickign graphs
 
 Check everything is using line count, not commit count
 
