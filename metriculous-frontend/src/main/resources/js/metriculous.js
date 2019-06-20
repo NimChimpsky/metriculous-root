@@ -3,15 +3,17 @@
 var api = '/api/v1';
 var queryString = '?start=0&end=20';
 
+function repo(json) {
+    console.log("repo" + json);
+    document.getElementById("repo-info").innerHTML = json;
+}
+
 function init() {
     // console.log("init");
     get(api + "/raw/person" + queryString, person);
     get(api + "/raw/file" + queryString, file);
     get(api + "/raw/time" + queryString, calendar);
-    // get(FILES + "?start=0&end=20", filesMostAuthorsCallback);
-    // get(COMMITS_FILES + "?start=0&end=20", filesInCommits);
-    // get(FILES + "?start=0&end=20", filesInMostCommits);
-    // get(FILES + "?start=0&end=20", filesInMostCommits);
+    get(api + "/repo" + queryString, repo);
 }
 
 // function linesInCommitsByPerson(person, json) {
