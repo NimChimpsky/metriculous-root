@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class MetriculousScannerTest {
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private final MetriculousScanner metriculousScanner = MetriculousScanner.create(Util.getTestRepo());
+    private MetriculousScanner metriculousScanner;
     private static final Paging PAGING = new Paging() {
         @Override
         public Integer start() {
@@ -36,6 +36,7 @@ public class MetriculousScannerTest {
 
     @Before
     public void setUp() throws Exception {
+        metriculousScanner = MetriculousScanner.create(Util.getTestRepo());
         metriculousScanner.run();
 
         while (!metriculousScanner.isComplete()) {

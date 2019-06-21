@@ -2,6 +2,7 @@ package au.com.metriculous.scanner;
 
 import au.com.metriculous.ApplicationConfiguration;
 import au.com.metriculous.ConfigurationSerializer;
+import au.com.metriculous.licensing.TrialPeriodStrategy;
 import au.com.metriculous.scanner.blame.BlameBasedScannerFactory;
 import au.com.metriculous.scanner.init.Scanner;
 import au.com.metriculous.scanner.init.ScannerType;
@@ -69,12 +70,22 @@ public class MetriculousScanner implements Scanner, ApiResult {
             throw new ScanException("Can't find GIT repo", e);
 
         }
-        ApplicationConfiguration applicationConfiguration = ConfigurationSerializer.read();
-        if (applicationConfiguration.isValidLicense()) {
+        TrialPeriodStrategy trialPeriodStrategy = new TrialPeriodStrategy();
+        if (trialPeriodStrategy.isWithinTrialPeriod()) {
+            LOGGER.info("Within Trial Period");
             MetriculousScanner metriculousScanner = new MetriculousScanner(repositoryPath, scanner);
             return metriculousScanner;
         } else {
-            throw new ScanException("Invalid License/Expired please contact support@metriculous.network");
+            LOGGER.info("Trial Period Expired");
+            ApplicationConfiguration applicationConfiguration = ConfigurationSerializer.read();
+            if (applicationConfiguration.isValidLicense()) {
+                LOGGER.info("Valid License Found");
+                MetriculousScanner metriculousScanner = new MetriculousScanner(repositoryPath, scanner);
+                return metriculousScanner;
+            } else {
+                LOGGER.error("No valid License contact support@metriculous.network");
+                throw new ScanException("Invalid License/Expired please contact support@metriculous.network");
+            }
         }
 
     }

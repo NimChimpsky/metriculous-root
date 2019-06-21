@@ -1,6 +1,9 @@
 package au.com.metriculous;
 
 import au.com.metriculous.licensing.License;
+import au.com.metriculous.licensing.ManifestReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -10,12 +13,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by stephen.batty on 7/9/2018.
  */
 public class ApplicationConfiguration {
-
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final int portNumber;
     private final int numberOfThreads;
     private final License license;
     private Map<String, ConcurrentHashMap<String, Object>> context;
     private List<String> repositoryPaths;
+    private static final ManifestReader manifestReader = new ManifestReader();
 
 
     public ApplicationConfiguration(int portNumber, int numberOfThreads, License license, List<String> repositoryPaths, Map<String, ConcurrentHashMap<String, Object>> context) {
@@ -35,7 +39,7 @@ public class ApplicationConfiguration {
     }
 
     public boolean isValidLicense() {
-        return license.isNotExpired();
+        return license.isValid();
     }
 
     public ConcurrentHashMap<String, Object> getContext(String repositoryPath) {
