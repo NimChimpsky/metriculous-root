@@ -1,5 +1,7 @@
 package au.com.metriculous.scanner;
 
+import au.com.metriculous.ApplicationConfiguration;
+import au.com.metriculous.ConfigurationSerializer;
 import au.com.metriculous.scanner.blame.BlameBasedScannerFactory;
 import au.com.metriculous.scanner.init.Scanner;
 import au.com.metriculous.scanner.init.ScannerType;
@@ -57,16 +59,24 @@ public class MetriculousScanner implements Scanner, ApiResult {
 
     }
 
-    public static MetriculousScanner create(String repositoryPath) {
+    public static MetriculousScanner create(String repositoryPath) throws ScanException {
         BlameBasedScannerFactory blameBasedScannerFactory = new BlameBasedScannerFactory();
         Scanner scanner = null;
         try {
             scanner = blameBasedScannerFactory.build(repositoryPath);
         } catch (IOException e) {
             LOGGER.error("Can't find GIT repo {}", e);
+            throw new ScanException("Can't find GIT repo", e);
+
         }
-        MetriculousScanner metriculousScanner = new MetriculousScanner(repositoryPath, scanner);
-        return metriculousScanner;
+        ApplicationConfiguration applicationConfiguration = ConfigurationSerializer.read();
+        if (applicationConfiguration.isValidLicense()) {
+            MetriculousScanner metriculousScanner = new MetriculousScanner(repositoryPath, scanner);
+            return metriculousScanner;
+        } else {
+            throw new ScanException("Invalid License/Expired please contact support@metriculous.network");
+        }
+
     }
 
     @Override

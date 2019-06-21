@@ -1,5 +1,4 @@
 rootProject.name = 'metriculous-root'
-include 'metriculous-scanner'
-include 'metriculous-frontend'
-include 'metriculous-license'
+include 'metriculous-scanner','metriculous-frontend','metriculous-license'
+
 
