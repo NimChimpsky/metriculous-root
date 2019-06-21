@@ -34,7 +34,7 @@ public class BlameBasedScannerFactory implements ScannerFactory {
 
     private String checkPath(String repositoryPath) {
         if (!repositoryPath.endsWith(".git")) {
-            logger.warn("Git repo path doesn't look right, appending .git");
+//            logger.warn("Git repo path doesn't look right, appending .git");
             return repositoryPath + ".git";
         }
         return repositoryPath;
