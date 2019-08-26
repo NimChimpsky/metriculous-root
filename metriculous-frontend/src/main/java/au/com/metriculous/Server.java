@@ -32,6 +32,8 @@ public class Server {
 
         LOGGER.info("Starting the webserver on port {} ", port);
 
+
+//        PropertyProvider propertyProvider = new PropertyProvider(port);
         ApplicationContext applicationContext = new Context(new DefaultDependencyProvider());
 
         DeploymentInfo servletBuilder = deployment()

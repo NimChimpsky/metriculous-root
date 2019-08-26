@@ -126,7 +126,7 @@ public class Context implements ApplicationContext {
                 try {
                     return (String) method.invoke(controller, parameters);
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    logger.error("Exception processing get request mapping {}", e);
+                    logger.error("Exception processing get request", e);
                     logger.error("parameters {}", mapToCsv(parameters));
                     return e.getMessage();
                 }
