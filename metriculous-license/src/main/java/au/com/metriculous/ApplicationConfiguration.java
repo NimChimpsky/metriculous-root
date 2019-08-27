@@ -6,9 +6,6 @@ import au.com.metriculous.licensing.ManifestReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Created by stephen.batty on 7/9/2018.
  */
@@ -17,21 +14,22 @@ public class ApplicationConfiguration {
     private final int portNumber;
     private final int numberOfThreads;
     private final License license;
-    private List<String> repositoryPaths;
+    private final String repositoryPath;
     private static final ManifestReader manifestReader = new ManifestReader();
 
 
-    public ApplicationConfiguration(int portNumber, int numberOfThreads, License license, List<String> repositoryPaths) {
+    public ApplicationConfiguration(int portNumber, int numberOfThreads, License license, String repositoryPath) {
         this.portNumber = portNumber;
         this.license = license;
         this.numberOfThreads = numberOfThreads;
-        this.repositoryPaths = repositoryPaths;
+        this.repositoryPath = repositoryPath;
     }
 
     public ApplicationConfiguration(PropertyProvider propertyProvider) {
         this.portNumber = propertyProvider.getPort();
-        this.repositoryPaths = Arrays.asList(propertyProvider.getRepositoryPath());
+        this.repositoryPath = propertyProvider.getRepositoryPath();
         this.numberOfThreads = 1;
+        this.license = null;
 
     }
 
@@ -51,7 +49,7 @@ public class ApplicationConfiguration {
         return numberOfThreads;
     }
 
-    public List<String> getRepositoryPaths() {
-        return repositoryPaths;
+    public String getRepositoryPath() {
+        return repositoryPath;
     }
 }

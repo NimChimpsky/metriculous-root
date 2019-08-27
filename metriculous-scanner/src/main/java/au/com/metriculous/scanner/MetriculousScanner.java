@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.EnumMap;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -77,8 +78,8 @@ public class MetriculousScanner implements Scanner, ApiResult {
             return metriculousScanner;
         } else {
             LOGGER.info("Trial Period Expired");
-            ApplicationConfiguration applicationConfiguration = ConfigurationSerializer.read();
-            if (applicationConfiguration.isValidLicense()) {
+            Optional<ApplicationConfiguration> optional = ConfigurationSerializer.read();
+            if (optional.isPresent() && optional.get().isValidLicense()) {
                 LOGGER.info("Valid License Found");
                 MetriculousScanner metriculousScanner = new MetriculousScanner(repositoryPath, scanner);
                 return metriculousScanner;

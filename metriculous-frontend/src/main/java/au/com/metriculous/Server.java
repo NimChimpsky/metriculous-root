@@ -37,11 +37,7 @@ public class Server {
         }
         ApplicationConfiguration applicationConfiguration = optionalConfig.get();
         LOGGER.info("Starting the webserver on port {} ", applicationConfiguration.getPortNumber());
-        for (String repository : applicationConfiguration.getRepositoryPaths()) {
-            LOGGER.info("Scanning repository {} ", repository);
-        }
-
-//        PropertyProvider propertyProvider = new PropertyProvider(port);
+        LOGGER.info("Scanning repository {} ", applicationConfiguration.getRepositoryPath());
         ApplicationContext applicationContext = new Context(new DefaultDependencyProvider(applicationConfiguration));
 
         DeploymentInfo servletBuilder = deployment()

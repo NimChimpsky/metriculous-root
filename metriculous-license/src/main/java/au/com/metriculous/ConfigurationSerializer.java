@@ -12,7 +12,9 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by stephenbatty on 09/07/2018.
@@ -57,8 +59,8 @@ public class ConfigurationSerializer {
     public static void main(String args[]) {
         String licenseNumber = 20191231 + "sbatty@gmail.com";
         License license = new License("sbatty@gmail.com", 20191231, Crypt.encode(licenseNumber));
-        List<String> repositoryPaths = Arrays.asList("/Users/stephenbatty/protean/.git");
-        ApplicationConfiguration applicationConfiguration = new ApplicationConfiguration(8080, 3, license, repositoryPaths, new HashMap<>());
+        String repositoryPath = "/Users/stephenbatty/protean/.git";
+        ApplicationConfiguration applicationConfiguration = new ApplicationConfiguration(8080, 3, license, repositoryPath);
         write(applicationConfiguration);
     }
 }
