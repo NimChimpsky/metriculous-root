@@ -1,13 +1,13 @@
 package au.com.metriculous;
 
+import au.com.metricsoftware.PropertyProvider;
 import au.com.metriculous.licensing.License;
 import au.com.metriculous.licensing.ManifestReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by stephen.batty on 7/9/2018.
@@ -17,17 +17,22 @@ public class ApplicationConfiguration {
     private final int portNumber;
     private final int numberOfThreads;
     private final License license;
-    private Map<String, ConcurrentHashMap<String, Object>> context;
     private List<String> repositoryPaths;
     private static final ManifestReader manifestReader = new ManifestReader();
 
 
-    public ApplicationConfiguration(int portNumber, int numberOfThreads, License license, List<String> repositoryPaths, Map<String, ConcurrentHashMap<String, Object>> context) {
+    public ApplicationConfiguration(int portNumber, int numberOfThreads, License license, List<String> repositoryPaths) {
         this.portNumber = portNumber;
         this.license = license;
-        this.context = context;
         this.numberOfThreads = numberOfThreads;
         this.repositoryPaths = repositoryPaths;
+    }
+
+    public ApplicationConfiguration(PropertyProvider propertyProvider) {
+        this.portNumber = propertyProvider.getPort();
+        this.repositoryPaths = Arrays.asList(propertyProvider.getRepositoryPath());
+        this.numberOfThreads = 1;
+
     }
 
     public License getLicense() {
@@ -40,10 +45,6 @@ public class ApplicationConfiguration {
 
     public boolean isValidLicense() {
         return license.isValid();
-    }
-
-    public ConcurrentHashMap<String, Object> getContext(String repositoryPath) {
-        return context.get(repositoryPath);
     }
 
     public int getNumberOfThreads() {

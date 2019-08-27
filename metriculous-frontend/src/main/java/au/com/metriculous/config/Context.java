@@ -136,7 +136,6 @@ public class Context implements ApplicationContext {
     }
 
 
-
     private BiFunction<Map<String, String>, String, String> createRequestBodyFunction(Method method, Object controller) {
         return new BiFunction<Map<String, String>, String, String>() {
             @Override

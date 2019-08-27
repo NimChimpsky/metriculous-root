@@ -12,10 +12,7 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by stephenbatty on 09/07/2018.
@@ -26,16 +23,17 @@ public class ConfigurationSerializer {
     private static final String fileName = "/metriculous.json";
     private static Gson gson = new Gson();
 
-    public static ApplicationConfiguration read() {
+    public static Optional<ApplicationConfiguration> read() {
         List<String> jsonAsCollection = Collections.emptyList();
         try {
             jsonAsCollection = Files.readAllLines(Paths.get(home + fileName), StandardCharsets.UTF_8);
         } catch (IOException e) {
             LOGGER.error("Problem reading config and license file {}, exception ", (home + fileName), e);
+            return Optional.empty();
         }
         String json = String.join("", jsonAsCollection);
         ApplicationConfiguration applicationConfiguration = gson.fromJson(json, ApplicationConfiguration.class);
-        return applicationConfiguration;
+        return Optional.of(applicationConfiguration);
 
     }
 

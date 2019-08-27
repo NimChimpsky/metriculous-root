@@ -1,6 +1,8 @@
 package au.com.metriculous;
 
 
+import au.com.metricsoftware.ArgumentParser;
+import au.com.metricsoftware.PropertyProvider;
 import au.com.metriculous.config.Context;
 import au.com.metriculous.config.DefaultDependencyProvider;
 import au.com.metriculous.config.framework.ApplicationContext;
@@ -16,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import static io.undertow.Handlers.resource;
 import static io.undertow.servlet.Servlets.*;
@@ -25,16 +28,21 @@ public class Server {
     private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
     public static void main(final String[] args) {
-        Integer port = 8081;
-        if (args.length > 0) {
-            port = Integer.parseInt(args[1]);
+        Optional<ApplicationConfiguration> optionalConfig = ConfigurationSerializer.read();
+
+        if (!optionalConfig.isPresent()) {
+            ArgumentParser argumentParser = new ArgumentParser(args);
+            PropertyProvider propertyProvider = new PropertyProvider(argumentParser);
+            optionalConfig.of(new ApplicationConfiguration(propertyProvider));
+        }
+        ApplicationConfiguration applicationConfiguration = optionalConfig.get();
+        LOGGER.info("Starting the webserver on port {} ", applicationConfiguration.getPortNumber());
+        for (String repository : applicationConfiguration.getRepositoryPaths()) {
+            LOGGER.info("Scanning repository {} ", repository);
         }
 
-        LOGGER.info("Starting the webserver on port {} ", port);
-
-
 //        PropertyProvider propertyProvider = new PropertyProvider(port);
-        ApplicationContext applicationContext = new Context(new DefaultDependencyProvider());
+        ApplicationContext applicationContext = new Context(new DefaultDependencyProvider(applicationConfiguration));
 
         DeploymentInfo servletBuilder = deployment()
                 .setClassLoader(Server.class.getClassLoader())
@@ -57,7 +65,7 @@ public class Server {
             throw new RuntimeException(e);
         }
         Undertow server = Undertow.builder()
-                                  .addHttpListener(port, "localhost")
+                                  .addHttpListener(applicationConfiguration.getPortNumber(), "localhost")
                                   .setHandler(createHandler(servletHandler))
                                   //.setHandler(servletHandler)
                                   .build();
