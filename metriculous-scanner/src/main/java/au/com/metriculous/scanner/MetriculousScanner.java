@@ -54,7 +54,9 @@ public class MetriculousScanner implements Scanner, ApiResult {
 
     @Override
     public void run() {
+
         for (Scanner scanner : scannerMap.values()) {
+            LOGGER.info("scanning started {}", scanner.getRepository());
             Executor executor = Executors.newSingleThreadExecutor();
             executor.execute(scanner);
         }

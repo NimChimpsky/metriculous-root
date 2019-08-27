@@ -17,8 +17,8 @@ function calendar(json) {
         format_tooltip_y: d => d + ' pts'
     });
     chart.parent.addEventListener('data-select', (e) => {
+        alert("Not yet implemented");
         // console.log(JSON.stringify(e));
-        alert("dayOfWeekEventListener" +e.index + " " + e.value
-        ); // e contains index and value of current datapoint
+        // alert("dayOfWeekEventListener" +e.index + " " + e.value ); // e contains index and value of current datapoint
     });
 }

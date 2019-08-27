@@ -31,6 +31,14 @@ table {
     justify-content: center
 }
 
+.verticalSpacer25px {
+    height: 25px;
+}
+
+footer {
+    text-align: center;
+}
+
 /*th{ color: rgb(102, 102, 102);*/
 /*font-size: 10px;*/
 /*font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;*/

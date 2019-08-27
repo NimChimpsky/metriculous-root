@@ -3,6 +3,7 @@ package au.com.metriculous;
 
 import au.com.metricsoftware.ArgumentParser;
 import au.com.metricsoftware.PropertyProvider;
+import au.com.metricsoftware.StringUtil;
 import au.com.metriculous.config.Context;
 import au.com.metriculous.config.DefaultDependencyProvider;
 import au.com.metriculous.config.framework.ApplicationContext;
@@ -31,13 +32,20 @@ public class Server {
         Optional<ApplicationConfiguration> optionalConfig = ConfigurationSerializer.read();
 
         if (!optionalConfig.isPresent()) {
+            LOGGER.info("No license found, checking command line arguments");
             ArgumentParser argumentParser = new ArgumentParser(args);
             PropertyProvider propertyProvider = new PropertyProvider(argumentParser);
             optionalConfig.of(new ApplicationConfiguration(propertyProvider));
         }
         ApplicationConfiguration applicationConfiguration = optionalConfig.get();
         LOGGER.info("Starting the webserver on port {} ", applicationConfiguration.getPortNumber());
-        LOGGER.info("Scanning repository {} ", applicationConfiguration.getRepositoryPath());
+        LOGGER.info("Repository to be scanned {} ", applicationConfiguration.getRepositoryPath());
+        if (StringUtil.isEmpty(applicationConfiguration.getRepositoryPath())) {
+            LOGGER.info("No repository path found, please specify at command line with, for example,  -repoPath /MyPath/MyDir/");
+            LOGGER.info("Alternatively buy a license and set in config file");
+            LOGGER.info("Can not start metriculous without a repository to scan");
+            LOGGER.info("Contact support for further assistance support@metriculous.network");
+        }
         ApplicationContext applicationContext = new Context(new DefaultDependencyProvider(applicationConfiguration));
 
         DeploymentInfo servletBuilder = deployment()

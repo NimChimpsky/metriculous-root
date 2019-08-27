@@ -3,14 +3,11 @@ package au.com.metriculous;
 import au.com.metricsoftware.PropertyProvider;
 import au.com.metriculous.licensing.License;
 import au.com.metriculous.licensing.ManifestReader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by stephen.batty on 7/9/2018.
  */
 public class ApplicationConfiguration {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final int portNumber;
     private final int numberOfThreads;
     private final License license;

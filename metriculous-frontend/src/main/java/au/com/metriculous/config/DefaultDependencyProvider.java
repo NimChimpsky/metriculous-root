@@ -21,6 +21,7 @@ public class DefaultDependencyProvider implements DependencyProvider {
         MetriculousScanner metriculousScanner = null;
         try {
             metriculousScanner = MetriculousScanner.create(applicationConfiguration.getRepositoryPath());
+            metriculousScanner.run();
             dependencies.put(MetriculousScanner.class, metriculousScanner);
         } catch (ScanException e) {
             logger.warn(e.getMessage());
