@@ -31,12 +31,14 @@ public class Server {
     public static void main(final String[] args) {
         Optional<ApplicationConfiguration> optionalConfig = ConfigurationSerializer.read();
 
-        if (!optionalConfig.isPresent()) {
-            LOGGER.info("No license found, checking command line arguments");
-            ArgumentParser argumentParser = new ArgumentParser(args);
-            PropertyProvider propertyProvider = new PropertyProvider(argumentParser);
-            optionalConfig.of(new ApplicationConfiguration(propertyProvider));
+        ArgumentParser argumentParser = new ArgumentParser(args);
+        PropertyProvider propertyProvider = new PropertyProvider(argumentParser);
+        String repositoryPath = propertyProvider.getRepositoryPath();
+
+        if (StringUtil.isPresent(repositoryPath)) {
+            optionalConfig = Optional.of(new ApplicationConfiguration(propertyProvider));
         }
+
         ApplicationConfiguration applicationConfiguration = optionalConfig.get();
         LOGGER.info("Starting the webserver on port {} ", applicationConfiguration.getPortNumber());
         LOGGER.info("Repository to be scanned {} ", applicationConfiguration.getRepositoryPath());
