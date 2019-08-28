@@ -118,10 +118,7 @@ function linesCommitTime(person, json) {
         format_tooltip_y: d => d + ' pts'
     });
     chart.parent.addEventListener('data-select', (e) => {
-        // console.log(JSON.stringify(e));
-        alert(e.index + " " + e.value
-        )
-        ; // e contains index and value of current datapoint
+        alert("Not yet implemented");
     });
 }
 
