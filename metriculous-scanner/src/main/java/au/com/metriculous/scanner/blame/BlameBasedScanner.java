@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created by stephen.batty on 7/10/2018.
@@ -58,17 +59,22 @@ public class BlameBasedScanner implements Scanner, BlameApiResult {
             treeWalk.setRecursive(true);
             treeWalk.setFilter(pathSuffixFilter);
             int count = 0;
+            Date start = new Date();
             while (treeWalk.next()) {
                 logger.debug("file {}", treeWalk.getPathString());
                 fileAnalyzer.analyze(repository, head, treeWalk.getPathString());
                 count++;
-                if (count == 110) {
-                    break; // for testing
+                if (count % 100 == 0) {
+                    Date now = new Date();
+                    long difference = now.getTime() - start.getTime();
+                    logger.info("Analyzed {} objects, duration so far {} seconds", count, (difference / 1000));
                 }
             }
             revWalk.dispose();
             complete = true;
-            logger.info("File traverser completed successfully");
+            Date now = new Date();
+            long difference = now.getTime() - start.getTime();
+            logger.info("File traversal completed successfully in {} seconds,  for {} objects", (difference / 1000), count);
 
 
         } catch (IOException e) {

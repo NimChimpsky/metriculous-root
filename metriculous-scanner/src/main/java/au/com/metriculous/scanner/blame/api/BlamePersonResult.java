@@ -2,9 +2,9 @@ package au.com.metriculous.scanner.blame.api;
 
 import au.com.metriculous.scanner.blame.BlameBasedFileAnalyzer;
 import au.com.metriculous.scanner.blame.BlameResultDataStore;
-import au.com.metriculous.scanner.domain.Person;
 import au.com.metriculous.scanner.domain.Pair;
-import au.com.metriculous.scanner.domain.TupleValueComparator;
+import au.com.metriculous.scanner.domain.PairRightReversingComparator;
+import au.com.metriculous.scanner.domain.Person;
 import au.com.metriculous.scanner.result.Paging;
 import au.com.metriculous.scanner.result.blame.PersonResult;
 
@@ -35,7 +35,7 @@ public class BlamePersonResult implements PersonResult {
                                                                                   .getValue());
                                                                       }
                                                                   })
-                                                                 .sorted(new TupleValueComparator())
+                                                                 .sorted(new PairRightReversingComparator())
                                                                  .collect(Collectors.toList());
 
         return paging.getSubList(resultList);
