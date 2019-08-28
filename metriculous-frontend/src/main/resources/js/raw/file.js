@@ -67,8 +67,8 @@ function lineCountForFileByTime(filename, json) {
     });
     chart.parent.addEventListener('data-select', (e) => {
         // console.log(JSON.stringify(e));
-        alert(e.index + " " + e.value
-        ); // e contains index and value of current datapoint
+        alert("Not yet implemented");
+        // alert(e.index + " " + e.value); // e contains index and value of current datapoint
     });
 }
 

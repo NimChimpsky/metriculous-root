@@ -48,8 +48,7 @@ function person(json) {
         document.getElementById("file-specific-info").style.display = "none";
         post(api + "/person/file" + queryString, people[e.index], personlinesPerFileCallback);
         post(api + "/person/time" + queryString, people[e.index], linesCommitTime);
-    })
-    ;
+    });
 }
 
 function personlinesPerFileCallback(person, json) {
