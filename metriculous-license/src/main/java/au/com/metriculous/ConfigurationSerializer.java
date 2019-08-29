@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
@@ -22,13 +23,16 @@ import java.util.Optional;
 public class ConfigurationSerializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationSerializer.class);
     private static final String home = System.getProperty("user.home");
-    private static final String fileName = "/metriculous.json";
+    private static final String fileName = java.io.File.separator + "metriculous.json";
     private static Gson gson = new Gson();
 
     public static Optional<ApplicationConfiguration> read() {
         List<String> jsonAsCollection = Collections.emptyList();
         try {
             jsonAsCollection = Files.readAllLines(Paths.get(home + fileName), StandardCharsets.UTF_8);
+        } catch (NoSuchFileException e) {
+            LOGGER.error("No License found {}", (home + fileName));
+            return Optional.empty();
         } catch (IOException e) {
             LOGGER.error("Problem reading config and license file {}, exception ", (home + fileName), e);
             return Optional.empty();
