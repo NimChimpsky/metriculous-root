@@ -42,6 +42,8 @@ public class Server {
         ApplicationConfiguration applicationConfiguration = optionalConfig.get();
         LOGGER.info("Starting the webserver on port {} ", applicationConfiguration.getPortNumber());
         LOGGER.info("Repository to be scanned {} ", applicationConfiguration.getRepositoryPath());
+        LOGGER.info("Application available at http://localhost:{}", applicationConfiguration.getPortNumber());
+        LOGGER.info("Refresh browser to see latest data until scan is compelte.");
         if (StringUtil.isEmpty(applicationConfiguration.getRepositoryPath())) {
             LOGGER.info("No repository path found, please specify at command line with, for example,  -repoPath /MyPath/MyDir/");
             LOGGER.info("Alternatively buy a license and set in config file");
