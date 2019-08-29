@@ -46,10 +46,8 @@ function file(json) {
 }
 
 function lineCountForFileByTime(filename, json) {
-    // console.log("person " + JSON.stringify(person));
-    // console.log("json " + JSON.stringify(json));
     let chart = new frappe.Chart("#lineCountForFileByTime", {
-        title: person.name + ": Time of most lines editted ",
+        title: filename + ": Time of most lines editted ",
         data: dayOfWeek(json),
         isNavigable: true,
         type: 'bar', // or 'line', 'scatter', 'pie', 'percentage'
