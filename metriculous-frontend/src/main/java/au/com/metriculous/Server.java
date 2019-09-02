@@ -68,6 +68,7 @@ public class Server {
         HttpHandler servletHandler = null;
         try {
             servletHandler = manager.start();
+
         } catch (ServletException e) {
             LOGGER.error("DeploymentManager failed to start, contact support");
             throw new RuntimeException(e);
@@ -77,8 +78,9 @@ public class Server {
                                   .setHandler(createHandler(servletHandler))
                                   //.setHandler(servletHandler)
                                   .build();
-        server.start();
 
+        server.start();
+        LOGGER.info("started http://localhost:8181/api/v1/raw/person?start=0&end=20 ");
 
     }
 
