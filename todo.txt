@@ -1,3 +1,5 @@
+product hunt, dev to, reddit/startup/java/programming/git, hackernews
+
 Polish up everything now in gui/api.
 
 graphs are initialized with a selection, that does not fire. Must click away and back again to fire.
