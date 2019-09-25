@@ -1,0 +1,21 @@
+Hi XXX.
+
+I am attempting to start a startup company.  To that end I am applying for a grant https://www.jobsfornsw.com.au/our-products/minimum-viable-product.
+
+We have already secured the initial funding of $20k (aud), for our grant application we need an expression of interest/letter of support from a third party.  If this grant is successful, there is a further development grant available for $100k (AUD).
+
+Could you provide this letter of support ? My understanding is that this commits you, the third party, to provide feedback/input into how the software works and what can be improved.  Exact info I need to submit is in attached grant.jpg.
+
+We so far have a website, 50% complete prototype, email and a correctly registered Australian company:
+https://metriculous.network/
+https://metriculous.network/screenshots
+email : support@metriculous.network
+
+The grant would be used to finish the prototype, improve/completely redesign website and try to get some customers!  There is one competitor to this product as far as I know, gitprime, they have < 20 customers and charge $800+(usd) a month for a one license.
+
+The software itself analyzes GIT commit history and presents the data in a friendly/graphical manner.  If you need any further details, or would like me to draft the support email let me know.
+
+If you are not interested, no worries! Thanks for reading anyway.  Say hi if you are ever in Australia - XXX.
+
+Regards,
+Stephen Batty.
