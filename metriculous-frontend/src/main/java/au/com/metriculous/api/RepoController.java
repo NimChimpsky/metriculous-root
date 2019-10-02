@@ -1,7 +1,7 @@
 package au.com.metriculous.api;
 
-import au.com.metriculous.config.framework.annotations.Controller;
-import au.com.metriculous.config.framework.annotations.Get;
+import au.com.metricsoftware.metrix.annotations.Controller;
+import au.com.metricsoftware.metrix.annotations.Get;
 import au.com.metriculous.scanner.MetriculousScanner;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
