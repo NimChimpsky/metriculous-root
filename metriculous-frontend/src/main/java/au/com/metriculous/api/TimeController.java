@@ -37,7 +37,7 @@ public class TimeController {
     }
 
     @Get("/time/zoneids")
-    public String availableTimeZones() {
+    public String availableTimeZones(Map<String, String> parameters) {
         Set<String> ids = ZoneRulesProvider.getAvailableZoneIds();
         return gson.toJson(ids);
     }
