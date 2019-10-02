@@ -20,7 +20,7 @@ public class Server {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
     private static final String[] controllerPackages
-            = {"au.com.metricsoftware.sample.controller", "au.com.metricsoftware.sample.other_controllers"};
+            = {"au.com.metriculous.api"};
 
     public static void main(final String[] args) {
         Optional<ApplicationConfiguration> optionalConfig = ConfigurationSerializer.read();
@@ -73,7 +73,7 @@ public class Server {
             LOGGER.error("Exception scanning repository", e);
 
         }
-        return null;
+        return dependencyMap;
 
     }
 
