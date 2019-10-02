@@ -1,5 +1,6 @@
 package au.com.metriculous.scanner.blame;
 
+import au.com.metriculous.scanner.Util;
 import au.com.metriculous.scanner.result.blame.PersonResult;
 import au.com.metriculous.scanner.result.blame.RawResult;
 import org.junit.Assert;

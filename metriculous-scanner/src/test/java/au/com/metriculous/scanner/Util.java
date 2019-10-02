@@ -1,4 +1,4 @@
-package au.com.metriculous.scanner.blame;
+package au.com.metriculous.scanner;
 
 public class Util {
 

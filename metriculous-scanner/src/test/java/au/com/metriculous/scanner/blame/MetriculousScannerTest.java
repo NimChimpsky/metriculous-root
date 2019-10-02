@@ -1,6 +1,7 @@
 package au.com.metriculous.scanner.blame;
 
 import au.com.metriculous.scanner.MetriculousScanner;
+import au.com.metriculous.scanner.Util;
 import au.com.metriculous.scanner.domain.Pair;
 import au.com.metriculous.scanner.domain.Person;
 import au.com.metriculous.scanner.domain.PersonWithCount;
