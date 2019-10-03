@@ -8,15 +8,14 @@ import au.com.metriculous.scanner.init.Scanner;
 import au.com.metriculous.scanner.init.ScannerType;
 import au.com.metriculous.scanner.result.conflict.ConflictApiResult;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.ListBranchCommand;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.errors.StopWalkException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.merge.MergeStrategy;
+import org.eclipse.jgit.merge.ResolveMerger;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.revwalk.filter.RevFilter;
@@ -59,10 +58,13 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
     @Override
     public void run() {
         try {
-            List<Ref> refs = new Git(repository).branchList().setListMode(ListBranchCommand.ListMode.ALL).call();
-//            for (Ref ref : refs) {
-//                logger.info("ref {}", ref.getName());
-//            }
+            Git git = new Git(repository);
+//            CheckoutCommand checkoutCommand = git.checkout();
+//            checkoutCommand.call()
+//            List<Ref> refs = git.branchList().setListMode(ListBranchCommand.ListMode.ALL).call();
+////            for (Ref ref : refs) {
+////                logger.info("ref {}", ref.getName());
+////            }
 
             ObjectId head = repository.resolve(Constants.HEAD);
             if (head == null) {
@@ -87,9 +89,36 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
             RevCommit headCommit = revWalk.parseCommit(head);
             revWalk.markStart(headCommit);
             for (RevCommit revCommit : revWalk) {
-                logger.info("shrt message {}", revCommit.getShortMessage());
-                logger.info("toString {}", revCommit.toString());
-                logger.info("toId {}", revCommit.toObjectId());
+                RevCommit[] parents = revCommit.getParents();
+                ResolveMerger recursiveMerger = (ResolveMerger) MergeStrategy.RECURSIVE.newMerger(repository, true);
+                boolean merged = recursiveMerger.merge(parents);
+
+                if (!merged) {
+                    for (RevCommit parent : parents) {
+                        logger.info("parent {}", parent.toString());
+                    }
+                    for (String unmergedPath : recursiveMerger.getUnmergedPaths()) {
+                        logger.info("unmerged {}", unmergedPath);
+                    }
+                }
+
+
+//                MergeCommand mergeCommand = git.merge();
+//                mergeCommand.setStrategy(MergeStrategy.RESOLVE);
+//                logger.info("attmepting to merge");
+//                for (RevCommit parent : parents) {
+//                    logger.info(parent.toString());
+//                    mergeCommand.include(parent);
+//                }
+//                mergeCommand.setCommit(false);
+//                MergeResult mergeResult = mergeCommand.call();
+//                if (mergeResult.getMergeStatus().equals(MergeResult.MergeStatus.CONFLICTING)) {
+//                    logger.info("Conflicts : {}", mergeResult.getConflicts().toString());
+//                    // inform the user he has to handle the conflicts
+//                }
+//                logger.info("shrt message {}", revCommit.getShortMessage());
+//                logger.info("toString {}", revCommit.toString());
+//                logger.info("toId {}", revCommit.toObjectId());
             }
 
             // get merge
@@ -97,7 +126,7 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
             // record users and files and line counts
 
 
-        } catch (GitAPIException | IOException e) {
+        } catch (/*GitAPIException | */IOException e) {
             logger.error("Unable to scan conflicts", e);
         }
 
