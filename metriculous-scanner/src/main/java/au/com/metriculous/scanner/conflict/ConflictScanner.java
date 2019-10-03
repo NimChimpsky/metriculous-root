@@ -53,6 +53,7 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
         return ScannerType.CONFLICT;
     }
 
+    //https://stackoverflow.com/questions/36372274/how-to-get-conflicts-before-merge-with-jgit
     // https://stackoverflow.com/questions/55817243/does-git-keep-a-record-of-past-merge-conflicts
     // https://stackoverflow.com/questions/49500943/what-is-git-rerere-and-how-does-it-work
     @Override
