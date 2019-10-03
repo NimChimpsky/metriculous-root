@@ -92,6 +92,10 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
                 logger.info("toId {}", revCommit.toObjectId());
             }
 
+            // get merge
+            // fond conflicts
+            // record users and files and line counts
+
 
         } catch (GitAPIException | IOException e) {
             logger.error("Unable to scan conflicts", e);

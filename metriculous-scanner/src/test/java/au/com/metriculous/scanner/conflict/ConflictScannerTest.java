@@ -32,6 +32,7 @@ public class ConflictScannerTest {
     @Ignore
     @Test
     public void testResultExists() {
+        //
         Assert.assertTrue(false);
     }
 }
