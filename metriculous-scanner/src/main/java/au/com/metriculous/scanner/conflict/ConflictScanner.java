@@ -4,6 +4,7 @@ import au.com.metriculous.scanner.domain.*;
 import au.com.metriculous.scanner.init.Scanner;
 import au.com.metriculous.scanner.init.ScannerType;
 import au.com.metriculous.scanner.result.conflict.ConflictApiResult;
+import org.eclipse.jgit.errors.NoMergeBaseException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -67,19 +68,25 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
             for (RevCommit revCommit : revWalk) {
                 RevCommit[] parents = revCommit.getParents();
                 ResolveMerger recursiveMerger = (ResolveMerger) MergeStrategy.RECURSIVE.newMerger(repository, true);
-                boolean merged = recursiveMerger.merge(parents);
-
-                if (!merged) {
-                    for (RevCommit parent : parents) {
-                        logger.info("parent {}", parent.toString());
-                        PersonIdent authorIdent = parent.getAuthorIdent();
-                        Person person = Person.fromIdent(authorIdent);
-                        conflictCountPerson.merge(person, 1, (integer, integer2) -> integer + integer2);
+                try {
+                    boolean merged = recursiveMerger.merge(parents);
+                    if (!merged) {
+                        for (RevCommit parent : parents) {
+                            logger.info("parent {}", parent.toString());
+                            RevWalk parentRevWalk = new RevWalk(repository);
+                            RevCommit parentCommit = parentRevWalk.parseCommit(parent);
+                            PersonIdent authorIdent = parentCommit.getAuthorIdent();
+                            Person person = Person.fromIdent(authorIdent);
+                            conflictCountPerson.merge(person, 1, (integer, integer2) -> integer + integer2);
+                        }
+                        for (String unmergedPath : recursiveMerger.getUnmergedPaths()) {
+                            logger.info("unmerged {}", unmergedPath);
+                            conflictCountPath.merge(unmergedPath, 1, (integer, integer2) -> integer + integer2);
+                        }
                     }
-                    for (String unmergedPath : recursiveMerger.getUnmergedPaths()) {
-                        logger.info("unmerged {}", unmergedPath);
-                        conflictCountPath.merge(unmergedPath, 1, (integer, integer2) -> integer + integer2);
-                    }
+                } catch (NoMergeBaseException e) {
+                    logger.error("Unable to merge", e);
+                    logger.error("Unable to merge reason", e.getReason());
                 }
 
 
@@ -99,7 +106,7 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
         for (Map.Entry<Person, Integer> entry : conflictCountPerson.entrySet()) {
             personWithCountList.add(new PersonWithCount(entry.getKey(), entry.getValue().longValue()));
         }
-        Collections.sort(personWithCountList, PersonWithCount.getCountComparator());
+        Collections.sort(personWithCountList, PersonWithCount.getCountComparator().reversed());
         return personWithCountList;
     }
 
@@ -114,7 +121,7 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
         for (Map.Entry<String, Integer> entry : conflictCountPath.entrySet()) {
             conflictedFiles.add(new Pair<>(entry.getKey(), entry.getValue()));
         }
-        Collections.sort(conflictedFiles, new PairRightComparator());
+        Collections.sort(conflictedFiles, new PairRightComparator().reversed());
         return conflictedFiles;
     }
 
