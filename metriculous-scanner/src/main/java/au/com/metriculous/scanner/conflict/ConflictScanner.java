@@ -102,8 +102,9 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
 
     @Override
     public List<PersonWithCount> mostConflictedPeople() {
-        List<PersonWithCount> personWithCountList = new ArrayList<>(conflictCountPerson.size());
-        for (Map.Entry<Person, Integer> entry : conflictCountPerson.entrySet()) {
+        Map<Person, Integer> resultCopy = new HashMap<>(conflictCountPerson);
+        List<PersonWithCount> personWithCountList = new ArrayList<>(resultCopy.size());
+        for (Map.Entry<Person, Integer> entry : resultCopy.entrySet()) {
             personWithCountList.add(new PersonWithCount(entry.getKey(), entry.getValue().longValue()));
         }
         Collections.sort(personWithCountList, PersonWithCount.getCountComparator().reversed());
@@ -117,8 +118,9 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
 
     @Override
     public List<Pair<String, Integer>> mostConflictedFiles() {
-        List<Pair<String, Integer>> conflictedFiles = new ArrayList<>(conflictCountPath.size());
-        for (Map.Entry<String, Integer> entry : conflictCountPath.entrySet()) {
+        Map<String, Integer> resultCopy = new HashMap<>(conflictCountPath);
+        List<Pair<String, Integer>> conflictedFiles = new ArrayList<>(resultCopy.size());
+        for (Map.Entry<String, Integer> entry : resultCopy.entrySet()) {
             conflictedFiles.add(new Pair<>(entry.getKey(), entry.getValue()));
         }
         Collections.sort(conflictedFiles, new PairRightComparator().reversed());
