@@ -101,6 +101,7 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
 
     }
 
+    // todo make sublist check size
     @Override
     public List<PersonWithCount> mostConflictedPeople(final Paging paging) {
         Map<Person, Integer> resultCopy = new HashMap<>(conflictCountPerson);
@@ -111,6 +112,7 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
         Collections.sort(personWithCountList, PersonWithCount.getCountComparator().reversed());
         return personWithCountList.subList(paging.start(), paging.end());
     }
+
 
     @Override
     public List<Pair<Person, Person>> mostConflictedPeoplePairs() {
