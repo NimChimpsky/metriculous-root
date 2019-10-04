@@ -6,7 +6,8 @@ var queryString = '?start=0&end=20';
 function repo(json) {
     // console.log("repo" + json);
     var str = "Showing stats for : " + json + "&nbsp;&nbsp;&nbsp; Click on charts to drill down";
-    document.getElementById("repo-info").innerHTML = str;
+    var conflicts = "<a href='Conflicts.html'>View Conflict data</a>";
+    document.getElementById("repo-info").innerHTML = str + " &nbsp;&nbsp;&nbsp; " + conflicts;
 }
 
 function init() {
