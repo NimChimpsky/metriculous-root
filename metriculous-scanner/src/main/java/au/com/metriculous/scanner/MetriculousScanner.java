@@ -4,6 +4,7 @@ import au.com.metriculous.ApplicationConfiguration;
 import au.com.metriculous.ConfigurationSerializer;
 import au.com.metriculous.licensing.TrialPeriodStrategy;
 import au.com.metriculous.scanner.blame.BlameBasedScannerFactory;
+import au.com.metriculous.scanner.conflict.ConflictScannerFactory;
 import au.com.metriculous.scanner.init.Scanner;
 import au.com.metriculous.scanner.init.ScannerType;
 import au.com.metriculous.scanner.result.ApiResult;
@@ -13,8 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.EnumMap;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -63,16 +63,11 @@ public class MetriculousScanner implements Scanner, ApiResult {
 
     }
 
-    public static MetriculousScanner create(String repositoryPath) throws ScanException {
-        BlameBasedScannerFactory blameBasedScannerFactory = new BlameBasedScannerFactory();
-        Scanner scanner = null;
-        try {
-            scanner = blameBasedScannerFactory.build(repositoryPath);
-        } catch (IOException e) {
-            LOGGER.error("Can't find GIT repo {}", e);
-            throw new ScanException("Can't find GIT repo", e);
+    public static MetriculousScanner create(String repositoryPath, List<ScannerType> scannerTypes) throws ScanException {
+        List<Scanner> scannerList = Collections.emptyList();
+        scannerList = createScanners(scannerTypes);
 
-        }
+
         TrialPeriodStrategy trialPeriodStrategy = new TrialPeriodStrategy();
         if (trialPeriodStrategy.isWithinTrialPeriod()) {
             LOGGER.info("Within Trial Period");
@@ -91,6 +86,37 @@ public class MetriculousScanner implements Scanner, ApiResult {
             }
         }
 
+    }
+
+    private static List<Scanner> createScanners(String repositoryPath, List<ScannerType> scannerTypes) {
+        List<Scanner> scannerList = new ArrayList<>(scannerTypes.size());
+        for (ScannerType scannerType : scannerTypes) {
+            try {
+                switch (scannerType) {
+                    case BLAME: {
+                        scannerList.add(new BlameBasedScannerFactory().build(repositoryPath));
+                        break;
+                    }
+                    case CONFLICT: {
+                        scannerList.add(new ConflictScannerFactory().build(repositoryPath));
+                        break;
+                    }
+
+
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        BlameBasedScannerFactory blameBasedScannerFactory = new BlameBasedScannerFactory();
+        Scanner scanner = null;
+        try {
+            scanner = blameBasedScannerFactory.build(repositoryPath);
+        } catch (IOException e) {
+            LOGGER.error("Can't find GIT repo {}", e);
+            throw new ScanException("Can't find GIT repo", e);
+
+        }
     }
 
     @Override
