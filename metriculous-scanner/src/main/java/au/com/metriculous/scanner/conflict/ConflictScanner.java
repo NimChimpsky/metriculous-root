@@ -3,6 +3,7 @@ package au.com.metriculous.scanner.conflict;
 import au.com.metriculous.scanner.domain.*;
 import au.com.metriculous.scanner.init.Scanner;
 import au.com.metriculous.scanner.init.ScannerType;
+import au.com.metriculous.scanner.result.Paging;
 import au.com.metriculous.scanner.result.conflict.ConflictApiResult;
 import org.eclipse.jgit.errors.NoMergeBaseException;
 import org.eclipse.jgit.lib.Constants;
@@ -101,14 +102,14 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
     }
 
     @Override
-    public List<PersonWithCount> mostConflictedPeople() {
+    public List<PersonWithCount> mostConflictedPeople(final Paging paging) {
         Map<Person, Integer> resultCopy = new HashMap<>(conflictCountPerson);
         List<PersonWithCount> personWithCountList = new ArrayList<>(resultCopy.size());
         for (Map.Entry<Person, Integer> entry : resultCopy.entrySet()) {
             personWithCountList.add(new PersonWithCount(entry.getKey(), entry.getValue().longValue()));
         }
         Collections.sort(personWithCountList, PersonWithCount.getCountComparator().reversed());
-        return personWithCountList;
+        return personWithCountList.subList(paging.start(), paging.end());
     }
 
     @Override
@@ -117,14 +118,14 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
     }
 
     @Override
-    public List<Pair<String, Integer>> mostConflictedFiles() {
+    public List<Pair<String, Integer>> mostConflictedFiles(final Paging paging) {
         Map<String, Integer> resultCopy = new HashMap<>(conflictCountPath);
         List<Pair<String, Integer>> conflictedFiles = new ArrayList<>(resultCopy.size());
         for (Map.Entry<String, Integer> entry : resultCopy.entrySet()) {
             conflictedFiles.add(new Pair<>(entry.getKey(), entry.getValue()));
         }
         Collections.sort(conflictedFiles, new PairRightComparator().reversed());
-        return conflictedFiles;
+        return conflictedFiles.subList(paging.start(), paging.end());
     }
 
     @Override
