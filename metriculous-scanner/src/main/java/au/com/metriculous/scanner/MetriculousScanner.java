@@ -23,7 +23,7 @@ public class MetriculousScanner implements Scanner, ApiResult {
     private final EnumMap<ScannerType, Scanner> scannerMap = new EnumMap<>(ScannerType.class);
     private final String repositoryPath;
 
-    private MetriculousScanner(final String repositoryPath, final Scanner... scanners) {
+    private MetriculousScanner(final String repositoryPath, List<Scanner> scanners) {
         this.repositoryPath = repositoryPath;
         for (Scanner scanner : scanners) {
             scannerMap.put(scanner.getScannerType(), scanner);
@@ -65,20 +65,20 @@ public class MetriculousScanner implements Scanner, ApiResult {
 
     public static MetriculousScanner create(String repositoryPath, List<ScannerType> scannerTypes) throws ScanException {
         List<Scanner> scannerList = Collections.emptyList();
-        scannerList = createScanners(scannerTypes);
+        scannerList = createScanners(repositoryPath, scannerTypes);
 
 
         TrialPeriodStrategy trialPeriodStrategy = new TrialPeriodStrategy();
         if (trialPeriodStrategy.isWithinTrialPeriod()) {
             LOGGER.info("Within Trial Period");
-            MetriculousScanner metriculousScanner = new MetriculousScanner(repositoryPath, scanner);
+            MetriculousScanner metriculousScanner = new MetriculousScanner(repositoryPath, scannerList);
             return metriculousScanner;
         } else {
             LOGGER.info("Trial Period Expired");
             Optional<ApplicationConfiguration> optional = ConfigurationSerializer.read();
             if (optional.isPresent() && optional.get().isValidLicense()) {
                 LOGGER.info("Valid License Found");
-                MetriculousScanner metriculousScanner = new MetriculousScanner(repositoryPath, scanner);
+                MetriculousScanner metriculousScanner = new MetriculousScanner(repositoryPath, scannerList);
                 return metriculousScanner;
             } else {
                 LOGGER.error("No valid License contact support@metriculous.network");
@@ -102,21 +102,13 @@ public class MetriculousScanner implements Scanner, ApiResult {
                         break;
                     }
 
-
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("Can't find GIT repo {}", e);
+                continue;
             }
         }
-        BlameBasedScannerFactory blameBasedScannerFactory = new BlameBasedScannerFactory();
-        Scanner scanner = null;
-        try {
-            scanner = blameBasedScannerFactory.build(repositoryPath);
-        } catch (IOException e) {
-            LOGGER.error("Can't find GIT repo {}", e);
-            throw new ScanException("Can't find GIT repo", e);
-
-        }
+        return scannerList;
     }
 
     @Override
