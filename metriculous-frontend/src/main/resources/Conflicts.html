@@ -1,10 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="static/js/conflict.js"></script>
+<script src="static/js/Chart.bundle.min.js"></script>
 <head>
     <meta charset="UTF-8">
     <title>Conflicts</title>
 </head>
+<style>
+    canvas {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+</style>
+<script>
+    // var color = Chart.helpers.color;
+    var horizontalBarChartData = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+            label: 'Dataset 1',
+            backgroundColor: 'red',
+            borderColor: 'orange',
+            borderWidth: 1,
+            data: [1, 10, 3, 4, 0.5, 7, 2.3]
+        }]
+    };
+
+    window.onload = function () {
+        var ctx = document.getElementById('canvas').getContext('2d');
+        window.myHorizontalBar = new Chart(ctx, {
+            type: 'horizontalBar',
+            data: horizontalBarChartData,
+            options: {
+                // Elements options apply to all of the options unless overridden in a dataset
+                // In this case, we are setting the border of each horizontal bar to be 2px wide
+                elements: {
+                    rectangle: {
+                        borderWidth: 2,
+                    }
+                },
+                responsive: true,
+                legend: {
+                    position: 'right',
+                },
+                title: {
+                    display: true,
+                    text: 'Chart.js Horizontal Bar Chart'
+                }
+            }
+        });
+
+    };
+
+</script>
 <body>
 Conflicts static handler ok
+<div id="container" style="width: 75%;">
+    <canvas id="canvas"></canvas>
+</div>
+
 </body>
+
 </html>
