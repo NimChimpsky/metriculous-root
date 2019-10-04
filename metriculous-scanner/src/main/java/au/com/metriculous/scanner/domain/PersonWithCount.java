@@ -1,5 +1,6 @@
 package au.com.metriculous.scanner.domain;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -38,5 +39,9 @@ public final class PersonWithCount {
     @Override
     public int hashCode() {
         return Objects.hash(person, getValue());
+    }
+
+    public static Comparator<PersonWithCount> getCountComparator() {
+        return Comparator.comparing(PersonWithCount::getValue);
     }
 }

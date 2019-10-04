@@ -1,51 +1,44 @@
 package au.com.metriculous.scanner.conflict;
 
-import au.com.metriculous.scanner.domain.Pair;
-import au.com.metriculous.scanner.domain.Person;
-import au.com.metriculous.scanner.domain.PersonWithCount;
-import au.com.metriculous.scanner.domain.Triple;
+import au.com.metriculous.scanner.domain.*;
 import au.com.metriculous.scanner.init.Scanner;
 import au.com.metriculous.scanner.init.ScannerType;
 import au.com.metriculous.scanner.result.conflict.ConflictApiResult;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
-import org.eclipse.jgit.errors.MissingObjectException;
-import org.eclipse.jgit.errors.StopWalkException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.merge.MergeStrategy;
 import org.eclipse.jgit.merge.ResolveMerger;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.revwalk.filter.RevFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 public class ConflictScanner implements Scanner, ConflictApiResult {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Repository repository;
     private ConflictFileAnalyzer conflictFileAnalyzer;
+    private Map<String, Integer> conflictCountPath = new HashMap<>();
+    private Map<Person, Integer> conflictCountPerson = new HashMap<>();
+    private boolean complete = false;
 
     public ConflictScanner(Repository repository, ConflictFileAnalyzer fileAnalyzer) { //, ExecutorService executorService) {
-//        this.context = context;
         this.repository = repository;
         this.conflictFileAnalyzer = fileAnalyzer;
-//        this.executorService = executorService;
-
     }
 
     @Override
     public boolean isComplete() {
-        return true;
+        return complete;
     }
 
     @Override
     public String getRepository() {
-        return null;
+        return repository.toString();
     }
 
     @Override
@@ -58,14 +51,8 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
     @Override
     public void run() {
         try {
-            Git git = new Git(repository);
-//            CheckoutCommand checkoutCommand = git.checkout();
-//            checkoutCommand.call()
-//            List<Ref> refs = git.branchList().setListMode(ListBranchCommand.ListMode.ALL).call();
-////            for (Ref ref : refs) {
-////                logger.info("ref {}", ref.getName());
-////            }
-
+            complete = false;
+//            Git git = new Git(repository);
             ObjectId head = repository.resolve(Constants.HEAD);
             if (head == null) {
                 String message = "Unable to find valid head, check your repo location";
@@ -74,18 +61,7 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
                 throw new IOException(message);
             }
             RevWalk revWalk = new RevWalk(repository);
-            revWalk.setRevFilter(new RevFilter() {
-                @Override
-                public boolean include(RevWalk walker, RevCommit cmit) throws StopWalkException, MissingObjectException, IncorrectObjectTypeException, IOException {
-                    return cmit.getParentCount() > 1;
-                }
-
-                @Override
-                public RevFilter clone() {
-                    return null;
-                }
-            });
-
+            revWalk.setRevFilter(new TwoParentFilter());
             RevCommit headCommit = revWalk.parseCommit(head);
             revWalk.markStart(headCommit);
             for (RevCommit revCommit : revWalk) {
@@ -96,36 +72,20 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
                 if (!merged) {
                     for (RevCommit parent : parents) {
                         logger.info("parent {}", parent.toString());
+                        PersonIdent authorIdent = parent.getAuthorIdent();
+                        Person person = Person.fromIdent(authorIdent);
+                        conflictCountPerson.merge(person, 1, (integer, integer2) -> integer + integer2);
                     }
                     for (String unmergedPath : recursiveMerger.getUnmergedPaths()) {
                         logger.info("unmerged {}", unmergedPath);
+                        conflictCountPath.merge(unmergedPath, 1, (integer, integer2) -> integer + integer2);
                     }
                 }
 
 
-//                MergeCommand mergeCommand = git.merge();
-//                mergeCommand.setStrategy(MergeStrategy.RESOLVE);
-//                logger.info("attmepting to merge");
-//                for (RevCommit parent : parents) {
-//                    logger.info(parent.toString());
-//                    mergeCommand.include(parent);
-//                }
-//                mergeCommand.setCommit(false);
-//                MergeResult mergeResult = mergeCommand.call();
-//                if (mergeResult.getMergeStatus().equals(MergeResult.MergeStatus.CONFLICTING)) {
-//                    logger.info("Conflicts : {}", mergeResult.getConflicts().toString());
-//                    // inform the user he has to handle the conflicts
-//                }
-//                logger.info("shrt message {}", revCommit.getShortMessage());
-//                logger.info("toString {}", revCommit.toString());
-//                logger.info("toId {}", revCommit.toObjectId());
             }
 
-            // get merge
-            // fond conflicts
-            // record users and files and line counts
-
-
+            complete = true;
         } catch (/*GitAPIException | */IOException e) {
             logger.error("Unable to scan conflicts", e);
         }
@@ -135,7 +95,12 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
 
     @Override
     public List<PersonWithCount> mostConflictedPeople() {
-        return null;
+        List<PersonWithCount> personWithCountList = new ArrayList<>(conflictCountPerson.size());
+        for (Map.Entry<Person, Integer> entry : conflictCountPerson.entrySet()) {
+            personWithCountList.add(new PersonWithCount(entry.getKey(), entry.getValue().longValue()));
+        }
+        Collections.sort(personWithCountList, PersonWithCount.getCountComparator());
+        return personWithCountList;
     }
 
     @Override
@@ -145,7 +110,12 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
 
     @Override
     public List<Pair<String, Integer>> mostConflictedFiles() {
-        return null;
+        List<Pair<String, Integer>> conflictedFiles = new ArrayList<>(conflictCountPath.size());
+        for (Map.Entry<String, Integer> entry : conflictCountPath.entrySet()) {
+            conflictedFiles.add(new Pair<>(entry.getKey(), entry.getValue()));
+        }
+        Collections.sort(conflictedFiles, new PairRightComparator());
+        return conflictedFiles;
     }
 
     @Override

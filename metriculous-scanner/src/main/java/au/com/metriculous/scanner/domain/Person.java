@@ -44,4 +44,5 @@ public class Person implements Comparable<Person> {
         return getName().compareTo(other.getName()) == 0 ? getEmail().compareTo(other.getEmail()) : getName().compareTo(other
                 .getName());
     }
+
 }
