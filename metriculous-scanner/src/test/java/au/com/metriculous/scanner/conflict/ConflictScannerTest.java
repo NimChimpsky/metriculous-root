@@ -3,6 +3,7 @@ package au.com.metriculous.scanner.conflict;
 import au.com.metriculous.scanner.Util;
 import au.com.metriculous.scanner.domain.Pair;
 import au.com.metriculous.scanner.domain.PersonWithCount;
+import au.com.metriculous.scanner.result.Paging;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,12 +34,12 @@ public class ConflictScannerTest {
         while (!conflictScanner.isComplete()) {
             Thread.sleep(500);
         }
-        List<Pair<String, Integer>> conflictedFiles = conflictScanner.mostConflictedFiles();
+        List<Pair<String, Integer>> conflictedFiles = conflictScanner.mostConflictedFiles(Paging.create(0, 200));
         for (Pair<String, Integer> pair : conflictedFiles) {
             logger.info("file {}, count {}", pair.getLeft(), pair.getRight());
         }
 
-        List<PersonWithCount> conflictedPeople = conflictScanner.mostConflictedPeople();
+        List<PersonWithCount> conflictedPeople = conflictScanner.mostConflictedPeople(Paging.create(0, 200));
         for (PersonWithCount personWithCount : conflictedPeople) {
             logger.info("person {}, count {}", personWithCount.getName(), personWithCount.getValue());
         }

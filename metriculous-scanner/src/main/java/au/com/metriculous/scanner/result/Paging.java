@@ -12,4 +12,18 @@ public interface Paging {
         int end = end() > resultList.size() ? resultList.size() : end();
         return resultList.subList(start(), end);
     }
+
+    static Paging create(int start, int end) {
+        return new Paging() {
+            @Override
+            public Integer start() {
+                return start;
+            }
+
+            @Override
+            public Integer end() {
+                return end;
+            }
+        };
+    }
 }

@@ -33,10 +33,9 @@ public class Server {
         }
 
         ApplicationConfiguration applicationConfiguration = optionalConfig.get();
-        LOGGER.info("Starting the webserver on port {} ", applicationConfiguration.getPortNumber());
         LOGGER.info("Repository to be scanned {} ", applicationConfiguration.getRepositoryPath());
         LOGGER.info("Application available at http://localhost:{}", applicationConfiguration.getPortNumber());
-        LOGGER.info("Refresh browser to see latest data until scan is compelte.");
+        LOGGER.info("Refresh browser to see latest data until scan is complete.");
         if (StringUtil.isEmpty(applicationConfiguration.getRepositoryPath())) {
             LOGGER.info("No repository path found, please specify at command line with, for example,  -repoPath /MyPath/MyDir/");
             LOGGER.info("Alternatively buy a license and set in config file");
@@ -44,7 +43,7 @@ public class Server {
             LOGGER.info("Contact support for further assistance support@metriculous.network");
         }
 
-        MetrixServer metrixServer = new MetrixServer.Builder().withPort(8181)
+        MetrixServer metrixServer = new MetrixServer.Builder().withPort(applicationConfiguration.getPortNumber())
                                                               .withApiUrlPrefix("/api/v1")
                                                               .withControllerPackages(controllerPackages)
                                                               .withDependencies(createObjectGraph(applicationConfiguration))

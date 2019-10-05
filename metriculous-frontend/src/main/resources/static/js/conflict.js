@@ -3,7 +3,7 @@ var queryString = '?start=0&end=20';
 
 function init() {
     // console.log("init");
-    get(api + "/conflict/file" + queryString, conflictedFileCallback());
+    get(api + "/conflict/file" + queryString, conflictedFileCallback);
     get(api + "/conflict/people" + queryString, conflictedPeopleCallback);
 
     var horizontalBarChartData = {
@@ -45,9 +45,9 @@ function init() {
 }
 
 function conflictedFileCallback(json) {
-    console.log("file : " + json);
+    console.log("file : " + json[0].left + " - " + json[0].right);
 }
 
 function conflictedPeopleCallback(json) {
-    console.log("people " + json);
+    console.log("people " + json[0].person.name + " " + json[0].value);
 }

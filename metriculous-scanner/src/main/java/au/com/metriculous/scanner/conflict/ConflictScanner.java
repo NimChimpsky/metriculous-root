@@ -111,7 +111,7 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
             personWithCountList.add(new PersonWithCount(entry.getKey(), entry.getValue().longValue()));
         }
         Collections.sort(personWithCountList, PersonWithCount.getCountComparator().reversed());
-        return personWithCountList.subList(paging.start(), paging.end());
+        return paging.getSubList(personWithCountList);
     }
 
 
@@ -128,7 +128,7 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
             conflictedFiles.add(new Pair<>(entry.getKey(), entry.getValue()));
         }
         Collections.sort(conflictedFiles, new PairRightComparator().reversed());
-        return conflictedFiles.subList(paging.start(), paging.end());
+        return paging.getSubList(conflictedFiles);
     }
 
     @Override

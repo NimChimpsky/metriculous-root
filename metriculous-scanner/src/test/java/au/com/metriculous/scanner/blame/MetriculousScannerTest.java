@@ -5,6 +5,7 @@ import au.com.metriculous.scanner.Util;
 import au.com.metriculous.scanner.domain.Pair;
 import au.com.metriculous.scanner.domain.Person;
 import au.com.metriculous.scanner.domain.PersonWithCount;
+import au.com.metriculous.scanner.init.ScannerType;
 import au.com.metriculous.scanner.result.Paging;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -37,7 +39,7 @@ public class MetriculousScannerTest {
 
     @Before
     public void setUp() throws Exception {
-        metriculousScanner = MetriculousScanner.create(Util.getTestRepo());
+        metriculousScanner = MetriculousScanner.create(Util.getTestRepo(), Arrays.asList(ScannerType.BLAME));
         metriculousScanner.run();
 
         while (!metriculousScanner.isComplete()) {
