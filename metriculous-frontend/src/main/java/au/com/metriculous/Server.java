@@ -7,14 +7,13 @@ import au.com.metricsoftware.StringUtil;
 import au.com.metricsoftware.metrix.MetrixServer;
 import au.com.metriculous.scanner.MetriculousScanner;
 import au.com.metriculous.scanner.ScanException;
+import au.com.metriculous.scanner.init.ScannerType;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class Server {
 
@@ -61,12 +60,13 @@ public class Server {
     }
 
     private static Map<Class<?>, Object> createObjectGraph(ApplicationConfiguration applicationConfiguration) {
+        List<ScannerType> scannerTypeList = Arrays.asList(ScannerType.values());
         Map<Class<?>, Object> dependencyMap = new HashMap<>(2);
         Gson gson = new Gson();
         dependencyMap.put(Gson.class, gson);
         MetriculousScanner metriculousScanner = null;
         try {
-            metriculousScanner = MetriculousScanner.create(applicationConfiguration.getRepositoryPath());
+            metriculousScanner = MetriculousScanner.create(applicationConfiguration.getRepositoryPath(), scannerTypeList);
             metriculousScanner.run();
             dependencyMap.put(MetriculousScanner.class, metriculousScanner);
         } catch (ScanException e) {
