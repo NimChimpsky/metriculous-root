@@ -8,4 +8,6 @@ public interface Scanner extends Runnable {
     String getRepository();
 
     ScannerType getScannerType();
+
+    void setConfig(ScanConfigurer scanConfigurer);
 }

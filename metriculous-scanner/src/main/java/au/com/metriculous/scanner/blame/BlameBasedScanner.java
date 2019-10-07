@@ -1,6 +1,8 @@
 package au.com.metriculous.scanner.blame;
 
 import au.com.metriculous.scanner.blame.api.*;
+import au.com.metriculous.scanner.init.DefaultScanConfigurer;
+import au.com.metriculous.scanner.init.ScanConfigurer;
 import au.com.metriculous.scanner.init.Scanner;
 import au.com.metriculous.scanner.init.ScannerType;
 import au.com.metriculous.scanner.result.blame.*;
@@ -11,8 +13,6 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
-import org.eclipse.jgit.treewalk.filter.PathSuffixFilter;
-import org.eclipse.jgit.treewalk.filter.TreeFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +29,7 @@ public class BlameBasedScanner implements Scanner, BlameApiResult {
     //    private final ExecutorService executorService;
     private final Repository repository;
     private final BlameBasedFileAnalyzer fileAnalyzer;
+    private ScanConfigurer scanConfigurer = new DefaultScanConfigurer();
     private boolean complete = false;
 
     public BlameBasedScanner(Repository repository, BlameBasedFileAnalyzer fileAnalyzer) { //, ExecutorService executorService) {
@@ -52,12 +53,12 @@ public class BlameBasedScanner implements Scanner, BlameApiResult {
             RevWalk revWalk = new RevWalk(repository);
 
             RevCommit commit = revWalk.parseCommit(head);
-            TreeFilter pathSuffixFilter = PathSuffixFilter.create(".java");
+
             RevTree revTree = commit.getTree();
             TreeWalk treeWalk = new TreeWalk(repository);
             treeWalk.addTree(revTree);
             treeWalk.setRecursive(true);
-            treeWalk.setFilter(pathSuffixFilter);
+            treeWalk.setFilter(scanConfigurer.getTreeFilter());
             int count = 0;
             Date start = new Date();
             while (treeWalk.next()) {
@@ -96,6 +97,11 @@ public class BlameBasedScanner implements Scanner, BlameApiResult {
     @Override
     public ScannerType getScannerType() {
         return ScannerType.BLAME;
+    }
+
+    @Override
+    public void setConfig(ScanConfigurer scanConfigurer) {
+        this.scanConfigurer = scanConfigurer;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package au.com.metriculous.scanner.conflict;
 
 import au.com.metriculous.scanner.domain.*;
+import au.com.metriculous.scanner.init.DefaultScanConfigurer;
+import au.com.metriculous.scanner.init.ScanConfigurer;
 import au.com.metriculous.scanner.init.Scanner;
 import au.com.metriculous.scanner.init.ScannerType;
 import au.com.metriculous.scanner.result.Paging;
@@ -23,9 +25,10 @@ import java.util.*;
 public class ConflictScanner implements Scanner, ConflictApiResult {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Repository repository;
-    private ConflictFileAnalyzer conflictFileAnalyzer;
+    private ScanConfigurer scanConfigurer = new DefaultScanConfigurer();
     private Map<String, Integer> conflictCountPath = new HashMap<>();
     private Map<Person, Integer> conflictCountPerson = new HashMap<>();
+    private final ConflictFileAnalyzer conflictFileAnalyzer;
     private boolean complete = false;
 
     public ConflictScanner(Repository repository, ConflictFileAnalyzer fileAnalyzer) { //, ExecutorService executorService) {
@@ -46,6 +49,11 @@ public class ConflictScanner implements Scanner, ConflictApiResult {
     @Override
     public ScannerType getScannerType() {
         return ScannerType.CONFLICT;
+    }
+
+    @Override
+    public void setConfig(ScanConfigurer scanConfigurer) {
+        this.scanConfigurer = scanConfigurer;
     }
 
     //https://stackoverflow.com/questions/36372274/how-to-get-conflicts-before-merge-with-jgit

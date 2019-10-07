@@ -5,11 +5,14 @@ import au.com.metriculous.ConfigurationSerializer;
 import au.com.metriculous.licensing.TrialPeriodStrategy;
 import au.com.metriculous.scanner.blame.BlameBasedScannerFactory;
 import au.com.metriculous.scanner.conflict.ConflictScannerFactory;
+import au.com.metriculous.scanner.init.DefaultScanConfigurer;
+import au.com.metriculous.scanner.init.ScanConfigurer;
 import au.com.metriculous.scanner.init.Scanner;
 import au.com.metriculous.scanner.init.ScannerType;
 import au.com.metriculous.scanner.result.ApiResult;
 import au.com.metriculous.scanner.result.blame.BlameApiResult;
 import au.com.metriculous.scanner.result.conflict.ConflictApiResult;
+import au.com.metriculous.scanner.result.meta.MetaScanApiResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +25,7 @@ public class MetriculousScanner implements Scanner, ApiResult {
     protected static final Logger LOGGER = LoggerFactory.getLogger(MetriculousScanner.class);
     private final EnumMap<ScannerType, Scanner> scannerMap = new EnumMap<>(ScannerType.class);
     private final String repositoryPath;
+    private ScanConfigurer scanConfigurer = new DefaultScanConfigurer();
 
     private MetriculousScanner(final String repositoryPath, List<Scanner> scanners) {
         this.repositoryPath = repositoryPath;
@@ -51,11 +55,17 @@ public class MetriculousScanner implements Scanner, ApiResult {
         return ScannerType.COMPOSITE;
     }
 
+    @Override
+    public void setConfig(ScanConfigurer scanConfigurer) {
+        this.scanConfigurer = scanConfigurer;
+    }
+
 
     @Override
     public void run() {
 
         for (Scanner scanner : scannerMap.values()) {
+            scanner.setConfig(scanConfigurer);
             LOGGER.info("Scanning started {}", scanner.getRepository());
             Executor executor = Executors.newSingleThreadExecutor();
             executor.execute(scanner);
@@ -119,6 +129,12 @@ public class MetriculousScanner implements Scanner, ApiResult {
     @Override
     public ConflictApiResult conflictResult() {
         return (ConflictApiResult) scannerMap.get(ScannerType.CONFLICT);
-
     }
+
+    @Override
+    public MetaScanApiResult metaScanResult() {
+        return (MetaScanApiResult) scannerMap.get(ScannerType.CONFLICT);
+    }
+
+
 }

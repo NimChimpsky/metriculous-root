@@ -38,4 +38,12 @@ public class PersonController {
                                                                .filesWithHighestLineCount(person, new DefaultPaging(parameters));
         return gson.toJson(result);
     }
+
+    @Post("/person/mostEdittedFiles")
+    public String personMostEdittedFile(Map<String, String> parameters, String json) {
+        Person person = gson.fromJson(json, Person.class);
+        List<Pair<String, Integer>> result = metriculousScanner.metaScanResult()
+                                                               .mostEdittedFiles(person, new DefaultPaging(parameters));
+        return gson.toJson(result);
+    }
 }
