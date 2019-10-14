@@ -25,14 +25,14 @@ public class ConflictController {
     @Get("/conflict/file")
     public String mostConflictedFiles(Map<String, String> parameters) {
         Paging paging = new DefaultPaging(parameters);
-        List<Pair<String, Integer>> commitList = metriculousScanner.conflictResult().mostConflictedFiles(paging);
+        List<Pair<String, Integer>> commitList = metriculousScanner.treeTraversalResult().conflict().mostConflictedFiles(paging);
         return gson.toJson(commitList);
     }
 
     @Get("/conflict/people")
     public String mostConflictedPeople(Map<String, String> parameters) {
         Paging paging = new DefaultPaging(parameters);
-        List<PersonWithCount> peopleList = metriculousScanner.conflictResult().mostConflictedPeople(paging);
+        List<PersonWithCount> peopleList = metriculousScanner.treeTraversalResult().conflict().mostConflictedPeople(paging);
         return gson.toJson(peopleList);
     }
 }
