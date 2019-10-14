@@ -73,5 +73,16 @@ public class BlameFileResult implements FileResult {
         return paging.getSubList(pairs);
     }
 
+    @Override
+    public Integer totalNumberOfFiles() {
+        return dataStore.getFileSize().keySet().size();
+    }
+
+    @Override
+    public Long totalNumberOfLines() {
+        return dataStore.getFileSize().values().stream().reduce(0, Integer::sum).longValue();
+
+    }
+
 
 }

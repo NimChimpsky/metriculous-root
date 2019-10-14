@@ -1,7 +1,6 @@
 package au.com.metriculous.api;
 
 import au.com.metricsoftware.metrix.annotations.Controller;
-import au.com.metricsoftware.metrix.annotations.Get;
 import au.com.metricsoftware.metrix.annotations.Post;
 import au.com.metriculous.scanner.MetriculousScanner;
 import au.com.metriculous.scanner.api.DefaultPaging;
@@ -40,25 +39,7 @@ public class FileController {
     }
 
 
-    @Get("/file/largest")
-    public String largestFiles(Map<String, String> parameters) {
-        Paging paging = new DefaultPaging(parameters);
-        List<Pair<String, Integer>> result = metriculousScanner.blameResult().file().largestFiles(paging);
-        return gson.toJson(result);
-    }
-
-    @Get("/file/size")
-    public String fileSize(Map<String, String> parameters) {
-        String filePathStr = parameters.get("filePathStr");
-        Integer lineCount = metriculousScanner.blameResult().file().sizeOfFile(filePathStr) - 2;
-        return gson.toJson(lineCount);
-    }
 
 
-    @Get("/file/mostEdits")
-    public String mostEdittedFiles(Map<String, String> parameters) {
-        Paging paging = new DefaultPaging(parameters);
-        List<Pair<String, Integer>> result = metriculousScanner.treeTraversalResult().meta().mostEdittedFiles(paging);
-        return gson.toJson(result);
-    }
+
 }

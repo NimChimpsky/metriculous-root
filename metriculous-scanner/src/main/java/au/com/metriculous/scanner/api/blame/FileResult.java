@@ -19,4 +19,8 @@ public interface FileResult {
      * @return ordered list of pairs, timestamp and count
      */
     List<Pair<Integer, Long>> timeLineCount(String filename, Paging paging);
+
+    Integer totalNumberOfFiles();
+
+    Long totalNumberOfLines();
 }
