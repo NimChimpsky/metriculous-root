@@ -3,16 +3,13 @@ package au.com.metriculous.scanner;
 import au.com.metriculous.ApplicationConfiguration;
 import au.com.metriculous.ConfigurationSerializer;
 import au.com.metriculous.licensing.TrialPeriodStrategy;
-import au.com.metriculous.scanner.blame.BlameBasedScannerFactory;
-import au.com.metriculous.scanner.conflict.ConflictScannerFactory;
-import au.com.metriculous.scanner.init.DefaultScanConfigurer;
-import au.com.metriculous.scanner.init.ScanConfigurer;
-import au.com.metriculous.scanner.init.Scanner;
-import au.com.metriculous.scanner.init.ScannerType;
-import au.com.metriculous.scanner.result.ApiResult;
-import au.com.metriculous.scanner.result.blame.BlameApiResult;
-import au.com.metriculous.scanner.result.conflict.ConflictApiResult;
-import au.com.metriculous.scanner.result.meta.MetaScanApiResult;
+import au.com.metriculous.scanner.api.ApiResult;
+import au.com.metriculous.scanner.api.blame.BlameApiResult;
+import au.com.metriculous.scanner.api.tree.TreeTraversalApiResult;
+import au.com.metriculous.scanner.config.*;
+import au.com.metriculous.scanner.config.Scanner;
+import au.com.metriculous.scanner.scan_implementations.blame.BlameBasedScannerFactory;
+import au.com.metriculous.scanner.scan_implementations.tree.TreeTraversalScannerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,8 +104,8 @@ public class MetriculousScanner implements Scanner, ApiResult {
                         scannerList.add(new BlameBasedScannerFactory().build(repositoryPath));
                         break;
                     }
-                    case CONFLICT: {
-                        scannerList.add(new ConflictScannerFactory().build(repositoryPath));
+                    case TREE: {
+                        scannerList.add(new TreeTraversalScannerFactory().build(repositoryPath));
                         break;
                     }
 
@@ -127,13 +124,8 @@ public class MetriculousScanner implements Scanner, ApiResult {
     }
 
     @Override
-    public ConflictApiResult conflictResult() {
-        return (ConflictApiResult) scannerMap.get(ScannerType.CONFLICT);
-    }
-
-    @Override
-    public MetaScanApiResult metaScanResult() {
-        return (MetaScanApiResult) scannerMap.get(ScannerType.CONFLICT);
+    public TreeTraversalApiResult treeTraversalResult() {
+        return (TreeTraversalApiResult) scannerMap.get(ScannerType.TREE);
     }
 
 

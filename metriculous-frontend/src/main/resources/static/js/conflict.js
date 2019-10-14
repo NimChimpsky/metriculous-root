@@ -1,8 +1,8 @@
-var api = '/api/v1';
+var api = '/result/v1';
 var queryString = '?start=0&end=20';
 
 function init() {
-    // console.log("init");
+    // console.log("config");
     get(api + "/conflict/file" + queryString, conflictedFileCallback);
     get(api + "/conflict/people" + queryString, conflictedPeopleCallback);
 

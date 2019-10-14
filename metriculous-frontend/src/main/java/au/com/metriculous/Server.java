@@ -6,8 +6,8 @@ import au.com.metricsoftware.PropertyProvider;
 import au.com.metricsoftware.StringUtil;
 import au.com.metricsoftware.metrix.MetrixServer;
 import au.com.metriculous.scanner.MetriculousScanner;
-import au.com.metriculous.scanner.ScanException;
-import au.com.metriculous.scanner.init.ScannerType;
+import au.com.metriculous.scanner.config.ScanException;
+import au.com.metriculous.scanner.config.ScannerType;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class Server {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
     private static final String[] controllerPackages
-            = {"au.com.metriculous.api"};
+            = {"au.com.metriculous.result"};
 
     public static void main(final String[] args) {
         Optional<ApplicationConfiguration> optionalConfig = ConfigurationSerializer.read();
@@ -44,13 +44,13 @@ public class Server {
         }
 
         MetrixServer metrixServer = new MetrixServer.Builder().withPort(applicationConfiguration.getPortNumber())
-                                                              .withApiUrlPrefix("/api/v1")
+                                                              .withApiUrlPrefix("/result/v1")
                                                               .withControllerPackages(controllerPackages)
                                                               .withDependencies(createObjectGraph(applicationConfiguration))
                                                               .build();
         try {
             metrixServer.start();
-            LOGGER.info("started http://localhost:8181/api/v1/raw/person?start=0&end=20 ");
+            LOGGER.info("started server");
         } catch (IOException | ClassNotFoundException e) {
             LOGGER.error("Unable to start up", e);
         }

@@ -4,10 +4,10 @@ import au.com.metricsoftware.metrix.annotations.Controller;
 import au.com.metricsoftware.metrix.annotations.Get;
 import au.com.metricsoftware.metrix.annotations.Post;
 import au.com.metriculous.scanner.MetriculousScanner;
+import au.com.metriculous.scanner.api.DefaultPaging;
+import au.com.metriculous.scanner.api.Paging;
 import au.com.metriculous.scanner.domain.Pair;
 import au.com.metriculous.scanner.domain.PersonWithCount;
-import au.com.metriculous.scanner.result.DefaultPaging;
-import au.com.metriculous.scanner.result.Paging;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -39,19 +39,26 @@ public class FileController {
         return gson.toJson(result);
     }
 
-    // TODO finish this
+
     @Get("/file/largest")
     public String largestFiles(Map<String, String> parameters) {
         Paging paging = new DefaultPaging(parameters);
-        List<Pair<String, Integer>> result = metriculousScanner.metaScanResult().largestFiles(paging);
+        List<Pair<String, Integer>> result = metriculousScanner.blameResult().file().largestFiles(paging);
         return gson.toJson(result);
     }
 
-    // TODO finish this
+    @Get("/file/size")
+    public String fileSize(Map<String, String> parameters) {
+        String filePathStr = parameters.get("filePathStr");
+        Integer lineCount = metriculousScanner.blameResult().file().sizeOfFile(filePathStr) - 2;
+        return gson.toJson(lineCount);
+    }
+
+
     @Get("/file/mostEdits")
     public String mostEdittedFiles(Map<String, String> parameters) {
         Paging paging = new DefaultPaging(parameters);
-        List<Pair<String, Integer>> result = metriculousScanner.metaScanResult().mostEdittedFiles(paging);
+        List<Pair<String, Integer>> result = metriculousScanner.treeTraversalResult().meta().mostEdittedFiles(paging);
         return gson.toJson(result);
     }
 }

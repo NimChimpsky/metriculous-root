@@ -1,6 +1,6 @@
 // Javascript
 // Javascript
-var api = '/api/v1';
+var api = '/result/v1';
 var queryString = '?start=0&end=20';
 
 function repo(json) {
@@ -11,7 +11,7 @@ function repo(json) {
 }
 
 function init() {
-    // console.log("init");
+    // console.log("config");
     get(api + "/raw/person" + queryString, person);
     get(api + "/raw/file" + queryString, file);
     get(api + "/raw/time" + queryString, calendar);

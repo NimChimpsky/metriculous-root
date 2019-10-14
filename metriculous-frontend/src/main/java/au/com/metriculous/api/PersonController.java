@@ -3,9 +3,9 @@ package au.com.metriculous.api;
 import au.com.metricsoftware.metrix.annotations.Controller;
 import au.com.metricsoftware.metrix.annotations.Post;
 import au.com.metriculous.scanner.MetriculousScanner;
+import au.com.metriculous.scanner.api.DefaultPaging;
 import au.com.metriculous.scanner.domain.Pair;
 import au.com.metriculous.scanner.domain.Person;
-import au.com.metriculous.scanner.result.DefaultPaging;
 import com.google.gson.Gson;
 
 import java.util.List;

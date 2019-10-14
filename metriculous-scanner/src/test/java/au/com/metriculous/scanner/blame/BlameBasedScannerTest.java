@@ -1,8 +1,11 @@
 package au.com.metriculous.scanner.blame;
 
 import au.com.metriculous.scanner.Util;
-import au.com.metriculous.scanner.result.blame.PersonResult;
-import au.com.metriculous.scanner.result.blame.RawResult;
+import au.com.metriculous.scanner.api.blame.FileResult;
+import au.com.metriculous.scanner.api.blame.PersonResult;
+import au.com.metriculous.scanner.api.blame.RawResult;
+import au.com.metriculous.scanner.scan_implementations.blame.BlameBasedScanner;
+import au.com.metriculous.scanner.scan_implementations.blame.BlameBasedScannerFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -36,7 +39,10 @@ public class BlameBasedScannerTest {
     public void testResultExists() {
         PersonResult peopleResult = blameBasedScanner.people();
         RawResult rawResult = blameBasedScanner.raw();
+        FileResult fileResult = blameBasedScanner.file();
+
         Assert.assertNotNull(peopleResult);
         Assert.assertNotNull(rawResult);
+        Assert.assertNotNull(fileResult);
     }
 }
