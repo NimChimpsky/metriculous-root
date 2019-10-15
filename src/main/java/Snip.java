@@ -1,16 +1,12 @@
 import java.io.Serializable;
+import java.time.LocalTime;
 import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class Snip {
 
     public static void main(String[] args) {
-        Set<String> test = new TreeSet<>(new NullFirstNaturalComparator());
-        test.add("cheese");
-        test.add("ham");
-        test.add(null);
-        System.out.println("Contains " + (test.contains(null)));
+        LocalTime now = LocalTime.now();
+        LocalTime before = LocalTime.MIN;
     }
 
     public static int fastModulo(int dividend, int divisor) {
