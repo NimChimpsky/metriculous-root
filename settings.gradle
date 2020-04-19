@@ -1,3 +1,3 @@
 rootProject.name = 'metriculous-root'
-include 'metriculous-scanner','metriculous-frontend','metriculous-license', "tools"
+include 'metriculous-scanner','metriculous-frontend','metriculous-license', "metriculous-tools"
 
