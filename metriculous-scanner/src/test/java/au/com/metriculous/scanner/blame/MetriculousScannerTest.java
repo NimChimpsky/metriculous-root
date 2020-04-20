@@ -1,7 +1,7 @@
 package au.com.metriculous.scanner.blame;
 
 import au.com.metriculous.scanner.MetriculousScanner;
-import au.com.metriculous.scanner.Util;
+import au.com.metriculous.scanner.TestUtil;
 import au.com.metriculous.scanner.api.Paging;
 import au.com.metriculous.scanner.config.ScannerType;
 import au.com.metriculous.scanner.domain.Pair;
@@ -39,7 +39,7 @@ public class MetriculousScannerTest {
 
     @Before
     public void setUp() throws Exception {
-        metriculousScanner = MetriculousScanner.create(Util.getTestRepo(), Arrays.asList(ScannerType.BLAME));
+        metriculousScanner = MetriculousScanner.create(TestUtil.getTestRepo(), Arrays.asList(ScannerType.BLAME));
         metriculousScanner.run();
 
         while (!metriculousScanner.isComplete()) {

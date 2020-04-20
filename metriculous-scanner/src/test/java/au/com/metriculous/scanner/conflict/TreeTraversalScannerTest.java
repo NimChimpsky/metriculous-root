@@ -1,6 +1,6 @@
 package au.com.metriculous.scanner.conflict;
 
-import au.com.metriculous.scanner.Util;
+import au.com.metriculous.scanner.TestUtil;
 import au.com.metriculous.scanner.api.Paging;
 import au.com.metriculous.scanner.domain.Pair;
 import au.com.metriculous.scanner.domain.PersonWithCount;
@@ -23,7 +23,7 @@ public class TreeTraversalScannerTest {
     public void setUp() {
         TreeTraversalScannerFactory factory = new TreeTraversalScannerFactory();
         try {
-            treeTraversalScanner = factory.build(Util.getTestRepo());
+            treeTraversalScanner = factory.build(TestUtil.getTestRepo());
             treeTraversalScanner.run();
         } catch (IOException e) {
             logger.error("error : {}", e);

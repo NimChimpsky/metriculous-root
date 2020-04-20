@@ -1,6 +1,6 @@
 package au.com.metriculous.scanner.blame;
 
-import au.com.metriculous.scanner.Util;
+import au.com.metriculous.scanner.TestUtil;
 import au.com.metriculous.scanner.api.blame.FileResult;
 import au.com.metriculous.scanner.api.blame.PersonResult;
 import au.com.metriculous.scanner.api.blame.RawResult;
@@ -23,7 +23,7 @@ public class BlameBasedScannerTest {
     public void setUp() {
         BlameBasedScannerFactory factory = new BlameBasedScannerFactory();
         try {
-            blameBasedScanner = factory.build(Util.getTestRepo());
+            blameBasedScanner = factory.build(TestUtil.getTestRepo());
 
             blameBasedScanner.run();
             while (!blameBasedScanner.isComplete()) {
